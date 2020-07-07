@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BounceRecyclerView">
+        <attr name="oritation">
+            <enum name="vertical" value="0" />
+            <enum name="horizontal" value="1" />
+        </attr>
+    </declare-styleable>
+    <string-array name="txz_sdk_init_wakeup_keywords">
+        <item>@string/txz_wake_up_name</item>
+    </string-array>
+    <string name="txz_sdk_init_app_id">0a705ed01863ed582f80e4dce1cb83ba</string>
+    <string name="txz_sdk_init_app_token">b5aff18fc8bbbbb17585444645e378d7442434cb</string>
+</resources>

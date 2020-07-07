@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Launcher_T20</string>
+    <string name="action_settings">Settings</string>
+    <string name="homeNavigation">导航</string>
+    <string name="homeRecorder">记录仪</string>
+    <string name="homeCloudService">云服务</string>
+    <string name="homeFM">FM</string>
+    <string name="homeBlueTooth">蓝牙</string>
+    <string name="homeMusic">音乐</string>
+    <string name="homePlayback">视频回放</string>
+    <string name="homeApp">应用</string>
+    <string name="app_not_install">该应用尚未安装!</string>
+    <string name="setting_opened">已打开</string>
+    <string name="setting_closed">已关闭</string>
+    <string name="setting_wifi">WIFI</string>
+    <string name="pop_wireless">无线数据</string>
+    <string name="pop_screen_control">屏幕控制</string>
+    <string name="pop_other">其他</string>
+    <string name="setting_mobile_data_status">4G连接状态</string>
+    <string name="mobile_data_status_connected">已连接</string>
+    <string name="mobile_data_status_unconnected">未连接</string>
+    <string name="rb_close_screen">灭屏</string>
+    <string name="rb_screen_saver">屏保</string>
+    <string name="rb_always_bright">常亮</string>
+    <string name="adjust_brightness">亮度调节</string>
+    <string name="rb_time_1min">1min</string>
+    <string name="rb_time_5min">5min</string>
+    <string name="rb_time_30min">30min</string>
+    <string name="setting_fm_switch">FM开关</string>
+    <string name="adjust_volume">音量调节</string>
+    <string name="setting_day_and_night">昼夜调节</string>
+    <string name="setting_day">白天</string>
+    <string name="setting_night">黑夜</string>
+    <string name="txz_wake_up_name">你好小海</string>
+
+</resources>

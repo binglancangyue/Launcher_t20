@@ -1,0 +1,158 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="TranslucentTheme" parent="Theme.Design.NoActionBar">
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <!--Android 5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色-->
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent
+        </item>
+    </style>
+
+    <style name="HomeTextViewStyle">
+        <item name="android:layout_marginEnd">15dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_gravity">right</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="HomeImageViewStyle">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">0dp</item>
+    </style>
+
+    <style name="HomeIconImageViewStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="PopWindowLeftBtnLayoutStyle">
+        <item name="android:background">@drawable/selector_left_setting_bg</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="PopWindowLeftBtnTextStyle">
+        <item name="android:layout_marginTop">@dimen/popWindowLeftBtnTextViewMarginTop</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/popWindowLeftBtnTextSize</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="PopWindowContainerLayoutStyle">
+        <item name="android:showDividers">middle</item>
+        <item name="android:divider">@drawable/iv_qs_container_spilt</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/iv_qs_container_bg</item>
+    </style>
+
+    <style name="PopWindowContainerItemLayoutStyle">
+        <item name="android:paddingStart">@dimen/PopWindowContainerItemLayoutMargin</item>
+        <item name="android:paddingEnd">@dimen/PopWindowContainerItemLayoutMargin</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="PopWindowContainerTileTextStyle">
+        <item name="android:minWidth">20dp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/popWindowLeftBtnTextSize</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="PopWindowContainerTextStyle">
+        <item name="android:layout_marginTop">@dimen/popWindowLeftBtnTextViewMarginTop</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/popWindowContainerTextSize</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="PopWindowContainerImageViewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="PopWindowContainerRadioButtonStyle">
+        <item name="android:layout_weight">1</item>
+        <item name="android:button">@drawable/selector_radio_button</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/popWindowContainerTextSize</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="PopWindowContainerCircularRadioButtonStyle">
+        <item name="android:layout_weight">1</item>
+        <item name="android:button">@drawable/selector_circular_radio_button</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/popWindowContainerTextSize</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+
+    <style name="PopWindowContainerItemLayoutSwitchStyle">
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="PopupWindowSeekBarStyle">
+        <item name="android:paddingEnd">@dimen/seekBarPadding</item>
+        <item name="android:paddingStart">@dimen/seekBarPadding</item>
+        <item name="android:maxHeight">4dp</item>
+        <item name="android:layout_marginEnd">@dimen/popupWindowSeekBarMargin</item>
+        <item name="android:layout_marginStart">@dimen/popupWindowSeekBarMargin</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:thumb">@drawable/seek_bar_circle</item>
+        <item name="android:progressDrawable">@drawable/seek_bar_progress_bg</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="SettingsTranslateAnim">
+        <item name="android:windowEnterAnimation">@anim/translate_in</item>
+        <item name="android:windowExitAnimation">@anim/translate_out</item>
+    </style>
+
+    <style name="Theme.MyDialog" parent="Widget.AppCompat.PopupWindow">
+        <item name="android:windowBackground">@drawable/dialog_style</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+</resources>

@@ -1,0 +1,19 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="homeItemSpacing">10dp</dimen>
+    <dimen name="homeLayoutTop">40dp</dimen>
+    <dimen name="homeLayoutStart">20dp</dimen>
+    <dimen name="recyclerViewItemHeight">153dp</dimen>
+    <dimen name="recyclerViewItemTop">15dp</dimen>
+    <dimen name="appIconWidth">65dp</dimen>
+    <dimen name="appNameTextSize">16sp</dimen>
+    <dimen name="settingContainerWidth">130dp</dimen>
+    <dimen name="PopWindowContainerItemLayoutMargin">30dp</dimen>
+
+    <dimen name="popWindowLeftBtnTextSize">18sp</dimen>
+    <dimen name="popWindowContainerTextSize">16sp</dimen>
+    <dimen name="popWindowLeftBtnTextViewMarginTop">5dp</dimen>
+    <dimen name="testSpacing">10dp</dimen>
+    <dimen name="popupWindowSeekBarMargin">15dp</dimen>
+    <dimen name="seekBarPadding">20dp</dimen>
+</resources>

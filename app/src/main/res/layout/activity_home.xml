@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/icon_hone_bg"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/homeLayoutStart"
+    android:paddingTop="@dimen/homeLayoutTop"
+    android:paddingEnd="@dimen/homeLayoutStart"
+    android:paddingBottom="@dimen/homeLayoutTop">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_navigation"
+            style="@style/HomeImageViewStyle"
+            android:layout_weight="3.67"
+            android:background="@drawable/selector_home_navi" />
+
+
+        <ImageView
+            android:id="@+id/iv_recorder"
+            style="@style/HomeImageViewStyle"
+            android:layout_marginStart="@dimen/homeItemSpacing"
+            android:layout_marginEnd="@dimen/homeItemSpacing"
+            android:layout_weight="2.66"
+            android:background="@drawable/selector_home_record" />
+
+
+        <ImageView
+            android:id="@+id/iv_cloud_service"
+            style="@style/HomeImageViewStyle"
+            android:layout_weight="3.67"
+            android:background="@drawable/selector_home_cloud_service" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/homeItemSpacing"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3.68"
+            tools:ignore="NestedWeights">
+
+            <ImageView
+                android:id="@+id/iv_fm"
+                style="@style/HomeImageViewStyle"
+                android:layout_marginEnd="@dimen/testSpacing"
+                android:layout_weight="1"
+                android:background="@drawable/selector_home_fm" />
+
+            <ImageView
+                android:id="@+id/iv_bluetooth"
+                style="@style/HomeImageViewStyle"
+                android:layout_weight="1"
+                android:background="@drawable/selector_home_bluetooth" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_music"
+            style="@style/HomeImageViewStyle"
+            android:layout_marginStart="@dimen/homeItemSpacing"
+            android:layout_marginEnd="@dimen/homeItemSpacing"
+            android:layout_weight="2.64"
+            android:background="@drawable/selector_home_music" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3.68">
+
+            <ImageView
+                android:id="@+id/iv_playback"
+                style="@style/HomeImageViewStyle"
+                android:layout_weight="1"
+                android:background="@drawable/selector_home_video_playback" />
+
+            <ImageView
+                android:id="@+id/iv_app"
+                style="@style/HomeImageViewStyle"
+                android:layout_marginStart="@dimen/homeItemSpacing"
+                android:layout_weight="1"
+                android:background="@drawable/selector_home_app" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
