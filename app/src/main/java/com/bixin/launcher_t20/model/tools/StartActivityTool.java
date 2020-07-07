@@ -8,7 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.bixin.launcher_t20.R;
-import com.bixin.launcher_t20.activity.MyApplication;
+import com.bixin.launcher_t20.activity.LauncherApplication;
 import com.txznet.sdk.TXZAsrManager;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class StartActivityTool {
     private Context mContext;
 
     public StartActivityTool() {
-        this.mContext = MyApplication.getApplication();
+        this.mContext = LauncherApplication.getInstance();
     }
 
     /**

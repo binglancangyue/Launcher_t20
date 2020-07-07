@@ -13,7 +13,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.bixin.launcher_t20.activity.MyApplication;
+import com.bixin.launcher_t20.activity.LauncherApplication;
 
 import static android.content.ContentValues.TAG;
 import static android.media.AudioManager.STREAM_MUSIC;
@@ -40,7 +40,7 @@ public class SettingsFunctionTool {
     }
 
     public SettingsFunctionTool() {
-        this.mContext = MyApplication.getApplication();
+        this.mContext = LauncherApplication.getInstance();
         locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();

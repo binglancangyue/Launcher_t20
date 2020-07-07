@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
-import com.bixin.launcher_t20.activity.MyApplication;
+import com.bixin.launcher_t20.activity.LauncherApplication;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -13,7 +13,7 @@ public class WifiTool {
     private WifiManager mWifiManager;
 
     public WifiTool() {
-        mContext = MyApplication.getApplication();
+        mContext = LauncherApplication.getInstance();
         mWifiManager =
                 (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
     }

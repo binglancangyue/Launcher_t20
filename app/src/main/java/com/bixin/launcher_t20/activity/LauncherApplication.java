@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MyApplication extends Application implements TXZConfigManager.InitListener,
+public class LauncherApplication extends Application implements TXZConfigManager.InitListener,
         TXZConfigManager.ActiveListener {
-    private static MyApplication myApplication = null;
+    private static LauncherApplication myApplication = null;
     public ArrayList<AppInfo> mAppList = new ArrayList<>();
     private TXZConfigManager.InitParam mInitParam;
 
@@ -34,7 +34,7 @@ public class MyApplication extends Application implements TXZConfigManager.InitL
         init();
     }
 
-    public static MyApplication getApplication() {
+    public static LauncherApplication getInstance() {
         return myApplication;
     }
 
@@ -100,7 +100,8 @@ public class MyApplication extends Application implements TXZConfigManager.InitL
                 || pkgName.equals(CustomValue.PACKAGE_NAME_DSJ)
                 || pkgName.equals(CustomValue.PACKAGE_NAME_FILE_MANAGER)
                 || pkgName.equals(CustomValue.PACKAGE_NAME_FM)
-                || pkgName.equals(CustomValue.PACKAGE_NAME_GPS)) {
+                || pkgName.equals(CustomValue.PACKAGE_NAME_GPS)
+                || pkgName.equals(CustomValue.PACKAGE_NAME_MAP_TOOL)) {
             return true;
         }
         return false;

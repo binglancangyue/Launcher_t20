@@ -12,7 +12,7 @@ import android.os.ResultReceiver;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.bixin.launcher_t20.activity.MyApplication;
+import com.bixin.launcher_t20.activity.LauncherApplication;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -28,7 +28,7 @@ public class WifiApTool {
     private WifiManager wifiManager;
 
     public WifiApTool() {
-        this.mContext = MyApplication.getApplication();
+        this.mContext = LauncherApplication.getInstance();
         this.wifiManager =
                 (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
     }

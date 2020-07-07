@@ -5,7 +5,7 @@
     package="com.bixin.launcher_t20">
 
     <application
-        android:name="com.bixin.launcher_t20.activity.MyApplication"
+        android:name="com.bixin.launcher_t20.activity.LauncherApplication"
         android:allowBackup="true"
         android:defaultToDeviceProtectedStorage="true"
         android:directBootAware="true"

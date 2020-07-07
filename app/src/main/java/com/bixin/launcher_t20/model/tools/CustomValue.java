@@ -22,7 +22,7 @@ public class CustomValue {
     public static final String PACKAGE_NAME_DSJ = "com.dianshijia.newlive";//电视家
     public static final String PACKAGE_NAME_SETTINGS = "com.android.settings";//系统settings
     public static final String PACKAGE_NAME_GPS = "com.chartcross.gpstestplus";//GPS test
-
+    public static final String PACKAGE_NAME_MAP_TOOL = "com.zqc.maptools"; //高德地图拷贝工具
 
     public final static String ACTION_TXZ_RECV = "com.txznet.adapter.recv";
     public final static String ACTION_TXZ_SEND = "com.txznet.adapter.send";

@@ -19,9 +19,11 @@ import com.bixin.launcher_t20.model.listener.OnSettingDisplayListener;
 import com.bixin.launcher_t20.model.listener.OnSettingPopupWindowListener;
 import com.bixin.launcher_t20.model.listener.OnTXZBroadcastListener;
 import com.bixin.launcher_t20.model.listener.OnTXZCallBackListener;
+import com.bixin.launcher_t20.model.receiver.APPReceiver;
 import com.bixin.launcher_t20.model.receiver.PopupWindowBroadcastReceiver;
 import com.bixin.launcher_t20.model.receiver.TXZBroadcastReceiver;
 import com.bixin.launcher_t20.model.tools.CustomValue;
+import com.bixin.launcher_t20.model.tools.InterfaceCallBackManagement;
 import com.bixin.launcher_t20.model.tools.ScreenControl;
 import com.bixin.launcher_t20.model.tools.SettingPopupWindow;
 import com.bixin.launcher_t20.model.tools.SharedPreferencesTool;
@@ -45,7 +47,7 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         OnTXZBroadcastListener, OnSettingPopupWindowListener {
     private static final String TAG = "HomeActivity";
     private Context mContext;
-    private MyApplication myApplication;
+    private LauncherApplication myApplication;
     private CompositeDisposable compositeDisposable;
     public InnerHandler mHandler;
     private StartActivityTool activityTools;
@@ -54,6 +56,7 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
     private TXZBroadcastReceiver mTxzReceiver;
     private PopupWindowBroadcastReceiver mPopupWindowBroadcastReceiver;
     private ScreenControl mScreenControl;
+    private APPReceiver mUpdateAppReceiver;
 
 
     @Override
@@ -77,7 +80,7 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
 
     private void init() {
         mContext = this;
-        myApplication = (MyApplication) getApplication();
+        myApplication = (LauncherApplication) getApplication();
         compositeDisposable = new CompositeDisposable();
         mHandler = new InnerHandler(this);
         activityTools = new StartActivityTool();
@@ -85,6 +88,7 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
 //        mPopupWindow.setOnSettingPopupWindowListener(this);
 //        mTxzReceiver = new TXZBroadcastReceiver(this);
         mPreferencesTools = new SharedPreferencesTool();
+        mUpdateAppReceiver = new APPReceiver();
     }
 
     private void initView() {
@@ -105,6 +109,16 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         ivMusic.setOnClickListener(this);
         ivPlayback.setOnClickListener(this);
         ivAPP.setOnClickListener(this);
+    }
+
+    private void registerAppReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        filter.addAction(Intent.ACTION_PACKAGE_REPLACED);
+        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+//        filter.addAction(Customer.ACTION_TXZ_CUSTOM_COMMAND);
+        filter.addDataScheme("package");
+        registerReceiver(mUpdateAppReceiver, filter);
     }
 
     @Override
@@ -277,6 +291,7 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
             startDVR();
 //            registerTXZReceiver();
             initAppInfo();
+            registerAppReceiver();
 //            createPopWindow();
 //            mScreenControl = new ScreenControl();
 //            mScreenControl.init();
@@ -359,6 +374,9 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         }
         if (mTxzReceiver != null) {
             unregisterReceiver(mTxzReceiver);
+        }
+        if (mUpdateAppReceiver != null) {
+            unregisterReceiver(mUpdateAppReceiver);
         }
     }
 

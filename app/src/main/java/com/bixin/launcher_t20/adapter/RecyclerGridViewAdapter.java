@@ -27,11 +27,16 @@ public class RecyclerGridViewAdapter extends RecyclerView.Adapter<RecyclerGridVi
         this.mListener = listener;
     }
 
+    public void setAppInfoArrayList(ArrayList<AppInfo> infoArrayList) {
+        this.mData = infoArrayList;
+    }
+
     public RecyclerGridViewAdapter(Context context, ArrayList<AppInfo> data) {
         this.mContext = context;
         this.mData = data;
         inflater = LayoutInflater.from(mContext);
     }
+
 
     @NonNull
     @Override
