@@ -1,9 +1,12 @@
 package com.bixin.launcher_t20.model.tools;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -82,7 +85,7 @@ public class StartActivityTool {
 //        it.putExtra("width", 1024);
 //        it.putExtra("height", 517);
         mContext.sendBroadcast(it);
-        TXZAsrManager.getInstance().triggerRecordButton();
+//        TXZAsrManager.getInstance().triggerRecordButton();
     }
 
     public boolean killPackageName(String packageName) {
@@ -145,6 +148,15 @@ public class StartActivityTool {
                 android.os.Process.killProcess(info.pid);
             }
         }
+    }
+
+    @SuppressLint("NewApi")
+    public void startVoiceRecognitionService() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        String packageName = "com.bixin.speechrecognitiontool";
+        String className = "com.bixin.speechrecognitiontool.SpeechRecognitionService";
+        intent.setClassName(packageName, className);
+        mContext.startForegroundService(intent);
     }
 
 }

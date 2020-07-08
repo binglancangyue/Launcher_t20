@@ -1,13 +1,16 @@
 package com.bixin.launcher_t20.activity;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -40,6 +43,8 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.bixin.launcher_t20.model.tools.CustomValue.ACTION_OPEN_TXZ_VIEW;
 
 
 public class LauncherHomeActivity extends RxActivity implements View.OnClickListener,
@@ -286,12 +291,15 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
                 }));
     }
 
+
+    @SuppressLint("NewApi")
     private void getFileData() {
         getWindow().getDecorView().post(() -> mHandler.post(() -> {
             startDVR();
 //            registerTXZReceiver();
             initAppInfo();
             registerAppReceiver();
+            activityTools.startVoiceRecognitionService();
 //            createPopWindow();
 //            mScreenControl = new ScreenControl();
 //            mScreenControl.init();
@@ -309,7 +317,7 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(CustomValue.ACTION_TXZ_RECV);
 //        intentFilter.addAction(CustomValue.ACTION_TXZ_SEND);
-        intentFilter.addAction(CustomValue.ACTION_OPEN_TXZ_VIEW);
+        intentFilter.addAction(ACTION_OPEN_TXZ_VIEW);
         intentFilter.addAction(CustomValue.ACTION_TXZ_INIT);
         registerReceiver(mTxzReceiver, intentFilter);
     }
