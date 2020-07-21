@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/icon_bx_home_bg"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="65dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/transparent_dividing_verticall_line"
+        android:orientation="horizontal"
+        android:showDividers="middle">
+
+        <ImageView
+            style="@style/HomeImageViewStyle"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/icon_bx_home_tiem" />
+
+        <ImageView
+            android:id="@+id/iv_bluetooth"
+            style="@style/HomeImageViewStyle"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/icon_bx_home_bt" />
+
+        <ImageView
+            android:id="@+id/iv_cloud_service"
+            style="@style/HomeImageViewStyle"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/icon_bx_home_service" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:divider="@drawable/transparent_dividing_verticall_line"
+        android:orientation="horizontal"
+        android:showDividers="middle">
+
+        <ImageView
+            android:id="@+id/iv_navigation"
+            style="@style/HomeImageViewStyle"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/icon_bx_home_navigation" />
+
+        <ImageView
+            android:id="@+id/iv_recorder"
+            style="@style/HomeImageViewStyle"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/icon_bx_home_record" />
+
+        <ImageView
+            android:id="@+id/iv_music"
+            style="@style/HomeImageViewStyle"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/icon_bx_home_music" />
+
+        <ImageView
+            android:id="@+id/iv_fm"
+            style="@style/HomeImageViewStyle"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/icon_bx_home_fm" />
+
+        <ImageView
+            android:id="@+id/iv_playback"
+            style="@style/HomeImageViewStyle"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/icon_bx_home_record"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_app"
+            style="@style/HomeImageViewStyle"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/icon_bx_home_app" />
+
+    </LinearLayout>
+</LinearLayout>

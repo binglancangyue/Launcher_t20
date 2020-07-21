@@ -67,7 +67,7 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_test);
+        setContentView(R.layout.activity_home_layout);
         init();
         initView();
         getFileData();
@@ -386,11 +386,6 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         if (mUpdateAppReceiver != null) {
             unregisterReceiver(mUpdateAppReceiver);
         }
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        return super.onKeyUp(keyCode, event);
     }
 
     @Override
