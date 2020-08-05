@@ -15,29 +15,43 @@ import com.bixin.launcher_t20.model.listener.OnAppUpdateListener;
 import com.bixin.launcher_t20.model.listener.OnRecyclerViewItemListener;
 import com.bixin.launcher_t20.model.tools.InterfaceCallBackManagement;
 import com.bixin.launcher_t20.model.tools.StartActivityTool;
+import com.trello.rxlifecycle2.android.ActivityEvent;
+import com.trello.rxlifecycle2.components.RxActivity;
 
 import java.util.ArrayList;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+
+import static com.trello.rxlifecycle2.RxLifecycle.bindUntilEvent;
 
 /**
  * @author Altair
  * @date :2019.10.28 上午 10:03
  * @description: AppList页面
  */
-public class AppListActivity extends Activity implements OnRecyclerViewItemListener, OnAppUpdateListener {
+public class AppListActivity extends RxActivity implements OnRecyclerViewItemListener, OnAppUpdateListener {
     private final static String TAG = "AppListActivity";
     private LauncherApplication myApplication;
     private ArrayList<AppInfo> appInfoArrayList = new ArrayList<>();
     private Context mContext;
     private StartActivityTool mActivityTools;
     private RecyclerGridViewAdapter mRecyclerGridViewAdapter;
+    private CompositeDisposable compositeDisposable;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_list);
         init();
-        initData();
         initView();
+//        initData();
+        initAppInfo();
     }
 
     @Override
@@ -52,6 +66,7 @@ public class AppListActivity extends Activity implements OnRecyclerViewItemListe
 
     private void init() {
         mContext = this;
+        compositeDisposable = new CompositeDisposable();
         myApplication = (LauncherApplication) getApplication();
 //        mActivityTools = new StartActivityTool(mContext);
         mActivityTools = new StartActivityTool();
@@ -59,27 +74,41 @@ public class AppListActivity extends Activity implements OnRecyclerViewItemListe
     }
 
     private void initView() {
-        RecyclerView recyclerView = findViewById(R.id.rcv_app);
+        recyclerView = findViewById(R.id.rcv_app);
         GridLayoutManager manager = new GridLayoutManager(this, 5);
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
-
-        mRecyclerGridViewAdapter = new RecyclerGridViewAdapter(this, appInfoArrayList);
-        recyclerView.setAdapter(mRecyclerGridViewAdapter);
-        mRecyclerGridViewAdapter.setOnRecyclerViewItemListener(this);
     }
 
 
-    private void initData() {
-        getAppList();
+//    private void initData() {
+//        getAppList();
+//    }
+
+    private void initAppInfo() {
+        compositeDisposable.add(Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> emitter) throws Exception {
+                getAppList(emitter);
+                emitter.onNext(true);
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(aBoolean -> {
+                    mRecyclerGridViewAdapter = new RecyclerGridViewAdapter(this, appInfoArrayList);
+                    recyclerView.setAdapter(mRecyclerGridViewAdapter);
+                    mRecyclerGridViewAdapter.setOnRecyclerViewItemListener(this);
+                }));
     }
 
-    public void getAppList() {
+    public void getAppList(ObservableEmitter<Boolean> emitter) {
         appInfoArrayList.clear();
 //        if (myApplication.getShowAppList().size() <= 3) {
         myApplication.initAppList();
 //        }
         appInfoArrayList = myApplication.getShowAppList();
+        emitter.onNext(true);
     }
 
     @Override
@@ -91,9 +120,20 @@ public class AppListActivity extends Activity implements OnRecyclerViewItemListe
     public void updateAppList() {
         Log.d(TAG, "updateAppList: ");
         if (mRecyclerGridViewAdapter != null) {
-            getAppList();
-            mRecyclerGridViewAdapter.setAppInfoArrayList(appInfoArrayList);
-            mRecyclerGridViewAdapter.notifyDataSetChanged();
+            compositeDisposable.add(Observable.create(new ObservableOnSubscribe<Boolean>() {
+                @Override
+                public void subscribe(ObservableEmitter<Boolean> emitter) throws Exception {
+                    getAppList(emitter);
+                    emitter.onNext(true);
+                }
+            }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .compose(bindUntilEvent(ActivityEvent.DESTROY))
+                    .subscribe(aBoolean -> {
+                        mRecyclerGridViewAdapter.setAppInfoArrayList(appInfoArrayList);
+                        mRecyclerGridViewAdapter.notifyDataSetChanged();
+                    }));
+
         }
     }
 
@@ -107,5 +147,10 @@ public class AppListActivity extends Activity implements OnRecyclerViewItemListe
     protected void onDestroy() {
         super.onDestroy();
         mContext = null;
+        if (compositeDisposable != null && !compositeDisposable.isDisposed()) {
+            compositeDisposable.dispose();
+            compositeDisposable.clear();
+            compositeDisposable = null;
+        }
     }
 }

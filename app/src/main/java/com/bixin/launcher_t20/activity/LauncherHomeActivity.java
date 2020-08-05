@@ -1,37 +1,40 @@
 package com.bixin.launcher_t20.activity;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextClock;
+import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bixin.launcher_t20.R;
-import com.bixin.launcher_t20.model.bean.TXZOperation;
+import com.bixin.launcher_t20.model.bean.WeatherBean;
+import com.bixin.launcher_t20.model.listener.OnLocationListener;
 import com.bixin.launcher_t20.model.listener.OnSettingDisplayListener;
 import com.bixin.launcher_t20.model.listener.OnSettingPopupWindowListener;
-import com.bixin.launcher_t20.model.listener.OnTXZBroadcastListener;
-import com.bixin.launcher_t20.model.listener.OnTXZCallBackListener;
 import com.bixin.launcher_t20.model.receiver.APPReceiver;
+import com.bixin.launcher_t20.model.receiver.AlarmReceiver;
 import com.bixin.launcher_t20.model.receiver.PopupWindowBroadcastReceiver;
 import com.bixin.launcher_t20.model.receiver.TXZBroadcastReceiver;
+import com.bixin.launcher_t20.model.receiver.WeatherReceiver;
 import com.bixin.launcher_t20.model.tools.CustomValue;
 import com.bixin.launcher_t20.model.tools.InterfaceCallBackManagement;
 import com.bixin.launcher_t20.model.tools.ScreenControl;
 import com.bixin.launcher_t20.model.tools.SettingPopupWindow;
 import com.bixin.launcher_t20.model.tools.SharedPreferencesTool;
 import com.bixin.launcher_t20.model.tools.StartActivityTool;
-import com.bixin.launcher_t20.model.tools.TXZVoiceControl;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.trello.rxlifecycle2.components.RxActivity;
 
@@ -48,8 +51,7 @@ import static com.bixin.launcher_t20.model.tools.CustomValue.ACTION_OPEN_TXZ_VIE
 
 
 public class LauncherHomeActivity extends RxActivity implements View.OnClickListener,
-        OnSettingDisplayListener, OnTXZCallBackListener,
-        OnTXZBroadcastListener, OnSettingPopupWindowListener {
+        OnSettingDisplayListener, OnSettingPopupWindowListener, OnLocationListener {
     private static final String TAG = "HomeActivity";
     private Context mContext;
     private LauncherApplication myApplication;
@@ -62,15 +64,35 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
     private PopupWindowBroadcastReceiver mPopupWindowBroadcastReceiver;
     private ScreenControl mScreenControl;
     private APPReceiver mUpdateAppReceiver;
+    private WeatherReceiver mWeatherReceiver;
+    private ImageView ivWeatherIcon;
+    private TextView tvWeather;
+    private TextView tvCurrentCity;
+    private WeatherBean weatherBean;
+    private AlarmManager manager;
+    private PendingIntent pi;
+    private AlarmReceiver alarmReceiver;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_layout);
+        setContentView(R.layout.activity_home_layout_weather);
         init();
         initView();
         getFileData();
+        mHandler.sendEmptyMessageDelayed(2, 2000);
+        mHandler.sendEmptyMessageDelayed(3, 4000);
+//        initUpdateWeatherAlarm();
+    }
+
+    private void initUpdateWeatherAlarm() {
+        long triggerAtTime = System.currentTimeMillis() + 60000;
+        alarmReceiver = new AlarmReceiver();
+        manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent i = new Intent(this, AlarmReceiver.class);
+        pi = PendingIntent.getBroadcast(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtTime, 10000, pi);
     }
 
 /*    @Override
@@ -92,8 +114,10 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
 //        mPopupWindow = new SettingPopupWindow(this);
 //        mPopupWindow.setOnSettingPopupWindowListener(this);
 //        mTxzReceiver = new TXZBroadcastReceiver(this);
+        InterfaceCallBackManagement.getInstance().setOnLocationListener(this);
         mPreferencesTools = new SharedPreferencesTool();
         mUpdateAppReceiver = new APPReceiver();
+        mWeatherReceiver = new WeatherReceiver();
     }
 
     private void initView() {
@@ -105,6 +129,9 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         ImageView ivMusic = findViewById(R.id.iv_music);
         ImageView ivPlayback = findViewById(R.id.iv_playback);
         ImageView ivAPP = findViewById(R.id.iv_app);
+        ivWeatherIcon = findViewById(R.id.iv_weather);
+        tvWeather = findViewById(R.id.tv_weather);
+        tvCurrentCity = findViewById(R.id.tv_city);
 
         ivNavigation.setOnClickListener(this);
         ivRecorder.setOnClickListener(this);
@@ -114,6 +141,12 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         ivMusic.setOnClickListener(this);
         ivPlayback.setOnClickListener(this);
         ivAPP.setOnClickListener(this);
+    }
+
+    private void registerWeatherReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(CustomValue.ACTION_UPDATE_WEATHER);
+        registerReceiver(mWeatherReceiver, filter);
     }
 
     private void registerAppReceiver() {
@@ -163,74 +196,92 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         mPopupWindow.showPopupWindow();
     }
 
-    @Override
-    public void openAPP(String packageName) {
-        if (packageName == null) {
-            activityTools.jumpToActivity(this, AppListActivity.class);
-        } else {
-            activityTools.launchAppByPackageName(packageName);
+//    @Override
+//    public void openAPP(String packageName) {
+//        if (packageName == null) {
+//            activityTools.jumpToActivity(this, AppListActivity.class);
+//        } else {
+//            activityTools.launchAppByPackageName(packageName);
+//
+//        }
+//    }
+//
+//    @Override
+//    public void closeApp(String packageName) {
+//        Log.d(TAG, "closeApp:killPackageName ");
+////        activityTools.stopApps(packageName);
+//        activityTools.killApp(packageName);
+//    }
 
-        }
-    }
-
-    @Override
-    public void closeApp(String packageName) {
-        Log.d(TAG, "closeApp:killPackageName ");
-//        activityTools.stopApps(packageName);
-        activityTools.killApp(packageName);
-    }
-
-    /**
-     * 同行者广播回调
-     *
-     * @param type         类型
-     * @param txzOperation 实体类
-     */
-    @Override
-    public void notifyActivity(int type, TXZOperation txzOperation) {
-        switch (type) {
-            case 1:
-                int light = txzOperation.getLight();
-                mPopupWindow.txzUpdateBrightnessOrVolume(0, light);
-                break;
-            case 2:
-                int volume = txzOperation.getVolume();
-                mPopupWindow.txzUpdateBrightnessOrVolume(1, volume);
-                break;
-            case 3:
-                boolean enableWifi = txzOperation.isEnableWifi();
-                mPopupWindow.txzUpdateWifiSwitch(enableWifi);
-                break;
-            case 4:
-                boolean screenOn = txzOperation.isScreenOpen();
-                if (screenOn) {
-                    mScreenControl.checkScreenOn();
-                } else {
-                    mScreenControl.checkScreenOff();
-                }
-                break;
-            case 5:
-                activityTools.goHome();
-                break;
-            case 6:
-                boolean enableBluetooth = txzOperation.isEnableBluetooth();
-                mPopupWindow.txzUpdateSwitch(4, enableBluetooth);
-                break;
-            case 8:
-                activityTools.openTXZView();
-                break;
-            case 9:
-                mPopupWindow.showPopupWindow();
-                break;
-            default:
-                new TXZVoiceControl(LauncherHomeActivity.this);
-                break;
-        }
-    }
+//    /**
+//     * 同行者广播回调
+//     *
+//     * @param type         类型
+//     * @param txzOperation 实体类
+//     */
+//    @Override
+//    public void notifyActivity(int type, TXZOperation txzOperation) {
+//        switch (type) {
+//            case 1:
+//                int light = txzOperation.getLight();
+//                mPopupWindow.txzUpdateBrightnessOrVolume(0, light);
+//                break;
+//            case 2:
+//                int volume = txzOperation.getVolume();
+//                mPopupWindow.txzUpdateBrightnessOrVolume(1, volume);
+//                break;
+//            case 3:
+//                boolean enableWifi = txzOperation.isEnableWifi();
+//                mPopupWindow.txzUpdateWifiSwitch(enableWifi);
+//                break;
+//            case 4:
+//                boolean screenOn = txzOperation.isScreenOpen();
+//                if (screenOn) {
+//                    mScreenControl.checkScreenOn();
+//                } else {
+//                    mScreenControl.checkScreenOff();
+//                }
+//                break;
+//            case 5:
+//                activityTools.goHome();
+//                break;
+//            case 6:
+//                boolean enableBluetooth = txzOperation.isEnableBluetooth();
+//                mPopupWindow.txzUpdateSwitch(4, enableBluetooth);
+//                break;
+//            case 8:
+//                activityTools.openTXZView();
+//                break;
+//            case 9:
+//                mPopupWindow.showPopupWindow();
+//                break;
+//            default:
+//                new TXZVoiceControl(LauncherHomeActivity.this);
+//                break;
+//        }
+//    }
 
     @Override
     public void sendMessageToActivity(int what) {
         Log.d(TAG, "sendMessageToActivity: ");
+    }
+
+    @Override
+    public void gpsSpeedChanged() {
+
+    }
+
+    @Override
+    public void updateWeather(String weatherInfo) {
+        Log.d(TAG, "updateWeather: ");
+        weatherBean = JSONObject.parseObject(weatherInfo, WeatherBean.class);
+        mHandler.sendEmptyMessage(4);
+    }
+
+    private void updateWeather() {
+        tvCurrentCity.setText(weatherBean.getCityName());
+        String weather = weatherBean.getWeather() + "  " + weatherBean.getCurrentTemperature() + "°";
+        tvWeather.setText(weather);
     }
 
     public static class InnerHandler extends Handler {
@@ -245,6 +296,17 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             activity = activityWeakReference.get();
+            if (msg.what == 2) {
+                activity.registerWeatherReceiver();
+                activity.registerAppReceiver();
+                activity.activityTools.startVoiceRecognitionService();
+            }
+            if (msg.what == 3) {
+                activity.startDVR();
+            }
+            if (msg.what == 4) {
+                activity.updateWeather();
+            }
         }
     }
 
@@ -277,29 +339,26 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
                 }));
     }
 
-    private void initTXZVoiceListener() {
-        compositeDisposable.add(Observable.create(new ObservableOnSubscribe<Boolean>() {
-            @Override
-            public void subscribe(ObservableEmitter<Boolean> emitter) throws Exception {
-                new TXZVoiceControl(LauncherHomeActivity.this);
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(bindUntilEvent(ActivityEvent.DESTROY))
-                .subscribe(aBoolean -> {
-
-                }));
-    }
+//    private void initTXZVoiceListener() {
+//        compositeDisposable.add(Observable.create(new ObservableOnSubscribe<Boolean>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<Boolean> emitter) throws Exception {
+//                new TXZVoiceControl(LauncherHomeActivity.this);
+//            }
+//        }).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .compose(bindUntilEvent(ActivityEvent.DESTROY))
+//                .subscribe(aBoolean -> {
+//
+//                }));
+//    }
 
 
     @SuppressLint("NewApi")
     private void getFileData() {
         getWindow().getDecorView().post(() -> mHandler.post(() -> {
-            startDVR();
 //            registerTXZReceiver();
             initAppInfo();
-            registerAppReceiver();
-            activityTools.startVoiceRecognitionService();
 //            createPopWindow();
 //            mScreenControl = new ScreenControl();
 //            mScreenControl.init();
@@ -334,25 +393,18 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         }
     }
 
-    private void intTXZWakeUpName() {
-        boolean firstInit = mPreferencesTools.getSharePreferences().getBoolean("first_init_txz",
-                true);
-        if (firstInit) {
-//            String name = SystemProperties.get("ro.txz.wakeup");
-//            if (TextUtils.isEmpty(name)) {
-//                name = "小爱同学";
-//            }
-//            Log.i(TAG, "wakeup name: " + name);
-//            Settings.System.putString(getContentResolver(), "cywl_wakeup_keywords", name);
-            mPreferencesTools.saveBoolean("first_init_txz", false);
-            initTXZVoiceListener();
-        }
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -386,13 +438,9 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         if (mUpdateAppReceiver != null) {
             unregisterReceiver(mUpdateAppReceiver);
         }
+        if (mWeatherReceiver != null) {
+            unregisterReceiver(mWeatherReceiver);
+        }
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
 }

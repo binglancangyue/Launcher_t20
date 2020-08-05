@@ -32,7 +32,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.AppListActivity" />
+        <activity
+            android:name=".activity.AppListActivity"
+            android:launchMode="singleTop" />
         <activity
             android:name=".activity.SettingsWindowActivity"
             android:theme="@style/Base.Theme.AppCompat.Dialog">

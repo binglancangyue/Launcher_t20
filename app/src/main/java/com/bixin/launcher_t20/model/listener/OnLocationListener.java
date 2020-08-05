@@ -10,4 +10,7 @@ public interface OnLocationListener {
      * location gps message
      */
     void gpsSpeedChanged();
+
+    void updateWeather(String weatherInfo);
+
 }

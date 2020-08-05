@@ -67,6 +67,27 @@ public class StartActivityTool {
         }
     }
 
+
+    /**
+     * 根据包名启动应用
+     *
+     * @param packageName clicked app
+     */
+    public void launchAppByPackageName(String packageName, boolean isTrue) {
+        if (TextUtils.isEmpty(packageName)) {
+            Log.i(TAG, "package name is null!");
+            return;
+        }
+
+        Intent launchIntent = mContext.getPackageManager().getLaunchIntentForPackage(packageName);
+        if (launchIntent == null) {
+            ToastTool.showToast(R.string.app_not_install);
+        } else {
+            launchIntent.putExtra("front", isTrue);
+            mContext.startActivity(launchIntent);
+        }
+    }
+
     /**
      * 返回桌面
      */

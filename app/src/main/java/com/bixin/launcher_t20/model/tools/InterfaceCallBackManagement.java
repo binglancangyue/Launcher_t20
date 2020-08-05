@@ -42,4 +42,10 @@ public class InterfaceCallBackManagement {
         }
     }
 
+    public void updateWeather(String weatherInfo) {
+        if (mOnLocationListener != null) {
+            mOnLocationListener.updateWeather(weatherInfo);
+        }
+    }
+
 }

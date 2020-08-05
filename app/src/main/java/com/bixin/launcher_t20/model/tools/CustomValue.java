@@ -14,7 +14,7 @@ public class CustomValue {
     public static final String PACKAGE_NAME_KWMUSIC = "cn.kuwo.kwmusiccar";// 酷我
     public static final String PACKAGE_NAME_BLUETOOTH = "cn.kuwo.kwmusiccar"; // 蓝牙
     public static final String PACKAGE_NAME_SOHU = "com.sohu.inputmethod.sogou"; // 搜狗输入法
-    public static final String PACKAGE_NAME_FILE_MANAGER = "com.cywl.launcher.documentmanagement";
+    public static final String PACKAGE_NAME_FILE_MANAGER = "com.cywl.launcher.filemanager";
     public static final String PACKAGE_NAME_ViDEO_PLAY_BACK = "com.bixin.bxvideolist";// 视频回放
     public static final String PACKAGE_NAME_TV_HOME = "com.dianshijia.newlive";
     public static final String PACKAGE_NAME_FM = "com.bixin.bxfm"; // FM
@@ -31,7 +31,7 @@ public class CustomValue {
     public final static String ACTION_OPEN_TXZ_VIEW = "com.bixin.launcher_t20.txz.open";
     public final static String ACTION_QUICK_SETTINGS_VIEW = "com.bixin.launcher_t20.txz.settings";
     public final static String ACTION_TXZ_INIT = "com.bixin.launcher_t20.txz.init";
-
+    public final static String ACTION_UPDATE_WEATHER = "com.bixin.speechrecognitiontool.action_update_weather";
 
     public static final int HANDLE_POP_WIFI_BTN = 1;
     public static final int HANDLE_POP_UPDATE_BTN = 2;
