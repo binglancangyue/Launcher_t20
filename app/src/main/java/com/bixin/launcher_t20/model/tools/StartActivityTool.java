@@ -3,6 +3,7 @@ package com.bixin.launcher_t20.model.tools;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -173,11 +174,96 @@ public class StartActivityTool {
 
     @SuppressLint("NewApi")
     public void startVoiceRecognitionService() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        String packageName = "com.bixin.speechrecognitiontool";
-        String className = "com.bixin.speechrecognitiontool.SpeechRecognitionService";
-        intent.setClassName(packageName, className);
-        mContext.startForegroundService(intent);
+        Log.d(TAG, "startVoiceRecognitionService: ");
+//        Intent intent = new Intent();
+//        String packageName = "com.bixin.speechrecognitiontool";
+//        String className = "com.bixin.speechrecognitiontool.SpeechRecognitionService";
+//        intent.setClassName(packageName, className);
+//        mContext.startForegroundService(intent);
+        launchAppByPackageName("com.bixin.speechrecognitiontool");
+    }
+
+    public int getWeatherIcon(String weather) {
+        Log.d(TAG, "getWeatherIcon: weather " + weather);
+        int iconId = 0;
+        switch (weather) {
+            case "多云":
+                iconId = R.drawable.ic_weather_cloudy;
+                break;
+            case "阴":
+            case "阴天":
+                iconId = R.drawable.ic_weather_cloudy_day;
+                break;
+            case "阵雨":
+                iconId = R.drawable.ic_weather_shower;
+                break;
+            case "雷阵雨伴有冰雹":
+                iconId = R.drawable.ic_weather_thunder_shower;
+                break;
+            case "雷阵雨":
+                iconId = R.drawable.ic_weather_thunder_storm_and_hail;
+                break;
+            case "小雨":
+            case "雨":
+                iconId = R.drawable.ic_weather_shower;
+                break;
+            case "中雨":
+                iconId = R.drawable.ic_weather_moderate_rain;
+                break;
+            case "大雨":
+                iconId = R.drawable.ic_weather_heavy_rain;
+                break;
+            case "暴雨":
+                iconId = R.drawable.ic_weather_baoyu;
+                break;
+            case "大暴雨":
+                iconId = R.drawable.ic_weather_dabaoyu;
+                break;
+            case "特暴大雨":
+                iconId = R.drawable.ic_weather_torrential_rain;
+                break;
+            case "冰雨":
+                iconId = R.drawable.ic_weather_ice_rain;
+                break;
+            case "小雪":
+                iconId = R.drawable.ic_weather_light_snow;
+                break;
+            case "中雪":
+                iconId = R.drawable.ic_weather_medium_snow;
+                break;
+            case "大雪":
+                iconId = R.drawable.ic_weather_heavy_snow;
+                break;
+            case "暴雪":
+                iconId = R.drawable.ic_weather_greate_heavy_snow;
+                break;
+            case "雨夹雪":
+                iconId = R.drawable.ic_weather_sleet;
+                break;
+            case "阵雪":
+                iconId = R.drawable.ic_weather_snow_shower;
+                break;
+            case "雾":
+                iconId = R.drawable.ic_weather_fog;
+                break;
+            case "霾":
+                iconId = R.drawable.ic_weather_haze;
+                break;
+            case "浮尘":
+                iconId = R.drawable.ic_weather_float_dust;
+                break;
+            case "扬沙":
+                iconId = R.drawable.ic_weather_raise_sand;
+                break;
+            case "沙尘暴":
+                iconId = R.drawable.ic_weather_dust_storm;
+                break;
+            default:    // 晴天
+                iconId = R.drawable.ic_weather_sunny_day;
+                break;
+
+        }
+        return iconId;
     }
 
 }

@@ -31,6 +31,7 @@ public class CustomValue {
     public final static String ACTION_OPEN_TXZ_VIEW = "com.bixin.launcher_t20.txz.open";
     public final static String ACTION_QUICK_SETTINGS_VIEW = "com.bixin.launcher_t20.txz.settings";
     public final static String ACTION_TXZ_INIT = "com.bixin.launcher_t20.txz.init";
+    public final static String ACTION_GET_WEATHER = "com.bixin.speechrecognitiontool.action_get_weather";
     public final static String ACTION_UPDATE_WEATHER = "com.bixin.speechrecognitiontool.action_update_weather";
 
     public static final int HANDLE_POP_WIFI_BTN = 1;

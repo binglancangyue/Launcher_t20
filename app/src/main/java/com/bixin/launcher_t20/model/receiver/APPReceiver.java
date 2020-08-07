@@ -20,19 +20,11 @@ public class APPReceiver extends BroadcastReceiver {
         if (action == null) {
             return;
         }
-        Log.d("APPReceiver", "onReceive:action " + action);
+        Log.d("APPReceiver", "onReceive:action:" + action + ";");
         if (action.equals(Intent.ACTION_PACKAGE_REMOVED) ||
                 action.equals(Intent.ACTION_PACKAGE_ADDED)) {
             LauncherApplication.getInstance().initAppList();
             InterfaceCallBackManagement.getInstance().updateAppList();
-            Log.d("APPReceiver", "onReceive: ");
         }
-//        if (action.equals(Customer.ACTION_TXZ_CUSTOM_COMMAND)) {
-//            String command = intent.getStringExtra("key_type");
-//            if (command.equals("CMD_OPEN_APP_MGT")) {
-//                Intent intent1 = new Intent(context, AppListActivity.class);
-//                LauncherApplication.getInstance().startActivity(intent1);
-//            }
-//        }
     }
 }
