@@ -59,7 +59,7 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         init();
         initView();
         getFileData();
-        mHandler.sendEmptyMessageDelayed(2, 6000);
+        mHandler.sendEmptyMessageDelayed(2, 4000);
         mHandler.sendEmptyMessageDelayed(3, 4000);
     }
 
@@ -181,16 +181,14 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
 
         private InnerHandler(LauncherHomeActivity activity) {
             this.activityWeakReference = new WeakReference<>(activity);
+            this.activity = activityWeakReference.get();
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            activity = activityWeakReference.get();
             if (msg.what == 2) {
                 activity.registerWeatherReceiver();
-                Intent intent = new Intent("com.bixin.action_start_service");
-                activity.sendBroadcast(intent);
                 activity.activityTools.startVoiceRecognitionService();
             }
             if (msg.what == 3) {
@@ -237,9 +235,7 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
     @SuppressLint("NewApi")
     private void getFileData() {
         getWindow().getDecorView().post(() -> mHandler.post(() -> {
-//            registerTXZReceiver();
             initAppInfo();
-//            createPopWindow();
 //            mScreenControl = new ScreenControl();
 //            mScreenControl.init();
 //            mScreenControl.checkAndTurnOnDeviceManager(this);
@@ -259,7 +255,7 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         try {
             mContext.startService(intent);
         } catch (Exception e) {
-            Log.e(TAG, "startDVR: e " + e.getMessage());
+            Log.e(TAG, "startDVR: " + e.getMessage());
         }
     }
 
@@ -291,14 +287,16 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
             compositeDisposable.clear();
         }
 
+        if (mWeatherReceiver != null) {
+            unregisterReceiver(mWeatherReceiver);
+        }
+
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
         }
 
-        if (mWeatherReceiver != null) {
-            unregisterReceiver(mWeatherReceiver);
-        }
+
     }
 
 }

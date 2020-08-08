@@ -3,17 +3,13 @@ package com.bixin.launcher_t20.model.tools;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.bixin.launcher_t20.R;
 import com.bixin.launcher_t20.activity.LauncherApplication;
-import com.txznet.sdk.TXZAsrManager;
 
 import java.io.IOException;
 import java.io.OutputStream;

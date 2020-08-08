@@ -19,15 +19,13 @@ import java.util.List;
 public class LauncherApplication extends Application {
     private static LauncherApplication myApplication = null;
     public ArrayList<AppInfo> mAppList = new ArrayList<>();
-//    private TXZConfigManager.InitParam mInitParam;
-
 
     @Override
     public void onCreate() {
         // TODO Auto-generated method stub
         super.onCreate();
         myApplication = this;
-        init();
+//        init();
     }
 
     public static LauncherApplication getInstance() {
@@ -104,64 +102,4 @@ public class LauncherApplication extends Application {
         return false;
     }
 
-//    private void initTXZ() {
-//        //  获取接入分配的appId和appToken
-//        String appId = this.getResources().getString(
-//                R.string.txz_sdk_init_app_id);
-//        String appToken = this.getResources().getString(
-//                R.string.txz_sdk_init_app_token);
-//        //  设置初始化参数
-//        mInitParam = new TXZConfigManager.InitParam(appId, appToken);
-//        //  可以设置自己的客户ID，同行者后台协助计数/鉴权
-//        // mInitParam.setAppCustomId("ABCDEFG");
-//        //  可以设置自己的硬件唯一标识码
-//        // mInitParam.setUUID("0123456789");
-//
-//        //  设置识别和tts引擎类型
-//        mInitParam.setAsrType(TXZConfigManager.AsrEngineType.ASR_YUNZHISHENG).setTtsType(
-//                TXZConfigManager.TtsEngineType.TTS_YUNZHISHENG);
-//        //  设置唤醒词
-//        String[] wakeupKeywords = this.getResources().getStringArray(
-//                R.array.txz_sdk_init_wakeup_keywords);
-//        mInitParam.setWakeupKeywordsNew(wakeupKeywords);
-//        // 19.7.24  跑模拟器时显示语音按钮
-//        // 掩藏语音按钮
-////        mInitParam.setFloatToolType(FLOAT_NONE);
-//
-//        //  可以按需要设置自己的对话模式
-//        // mInitParam.setAsrMode(AsrMode.ASR_MODE_CHAT);
-//        //  设置识别模式，默认自动模式即可
-//        // mInitParam.setAsrServiceMode(AsrServiceMode.ASR_SVR_MODE_AUTO);
-//        //  设置是否允许启用服务号
-//        // mInitParam.setEnableServiceContact(true);
-//        //  设置开启回音消除模式
-//        mInitParam.setFilterNoiseType(1);
-//        //  其他设置
-//
-//        //  初始化在这里
-//        TXZConfigManager.getInstance().initialize(this, mInitParam, this, this);
-////        TXZConfigManager.getInstance().initialize(this, this);
-//    }
-
-//    private void sendLocalBroadcast() {
-//        Intent intent = new Intent(CustomValue.ACTION_TXZ_INIT);
-//        sendBroadcast(intent);
-//    }
-
-//    @Override
-//    public void onSuccess() {
-//        Log.d("MyApplication", "txz init : onSuccess");
-//        sendLocalBroadcast();
-//    }
-//
-//    @Override
-//    public void onError(int i, String s) {
-//        Log.d("MyApplication", "onError: ");
-//    }
-//
-//    @Override
-//    public void onFirstActived() {
-//        new TXZVoiceAddCommand();
-//        Log.d("MyApplication", "onFirstActived: ");
-//    }
 }

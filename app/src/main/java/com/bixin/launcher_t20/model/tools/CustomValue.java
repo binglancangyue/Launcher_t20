@@ -34,12 +34,4 @@ public class CustomValue {
     public final static String ACTION_GET_WEATHER = "com.bixin.speechrecognitiontool.action_get_weather";
     public final static String ACTION_UPDATE_WEATHER = "com.bixin.speechrecognitiontool.action_update_weather";
 
-    public static final int HANDLE_POP_WIFI_BTN = 1;
-    public static final int HANDLE_POP_UPDATE_BTN = 2;
-    public static final int HANDLE_POP_UPDATE_SEEK_BAR = 3;
-    public static final int HANDLE_POP_UPDATE_BRIGHTNESS = 4;
-    public static final int HANDLE_POP_UPDATE_DATA = 5;
-    public static final int HANDLE_POP_UPDATE_BTN_TXZ = 6;
-    public static final int HANDLE_POP_UPDATE_BTN_BY_LISTENER = 7;
-
 }
