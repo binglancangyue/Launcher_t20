@@ -1,160 +1,233 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/icon_bx_home_bg"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:paddingBottom="65dp">
+    android:paddingBottom="40dp">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_weather"
+        android:layout_width="@dimen/weatherViewWidth"
+        android:layout_height="@dimen/weatherViewHeight"
+        android:layout_marginEnd="@dimen/homeItemMargin"
+        android:layout_marginBottom="3.5dp"
+        android:background="@drawable/ic_time_weather_bg"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/homeWeatherPaddingStart"
+        android:paddingBottom="@dimen/homeWeatherPaddingBottom"
+        app:layout_constraintBottom_toTopOf="@+id/gl_center"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/iv_bluetooth">
+
+        <TextClock
+            android:id="@+id/tc_time"
+            style="@style/TXZWeatherInfoTextViewStyle"
+            android:fontFamily="sans-serif-light"
+            android:format12Hour="HH:mm"
+            android:format24Hour="HH:mm"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/homeTimeTextSize"
+            app:layout_constraintBottom_toTopOf="@id/iv_gps_icon"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/iv_weather"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_gps_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/iv_qs_gps_disable"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/tc_time"
+            app:layout_constraintRight_toLeftOf="@id/tv_city"
+            app:layout_constraintTop_toBottomOf="@id/tc_time" />
+
+        <TextView
+            android:id="@+id/tv_city"
+            style="@style/TXZWeatherInfoTextViewStyle"
+            android:text="深圳市"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/iv_gps_icon"
+            app:layout_constraintRight_toLeftOf="@id/tc_data"
+            app:layout_constraintTop_toBottomOf="@id/tc_time" />
+
+        <TextClock
+            android:id="@+id/tc_data"
+            style="@style/TXZWeatherInfoTextViewStyle"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="20dp"
+            android:format12Hour="EE  yyyy-MM-dd"
+            android:format24Hour="EE  yyyy-MM-dd"
+            android:textSize="@dimen/homeDataTextSize"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tv_city"
+            app:layout_constraintRight_toRightOf="@id/tc_time"
+            app:layout_constraintTop_toBottomOf="@id/tc_time" />
+
+        <ImageView
+            android:id="@+id/iv_weather"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="3.5dp"
+            android:src="@drawable/ic_weather_sunny_day"
+            app:layout_constraintBottom_toTopOf="@id/tv_weather"
+            app:layout_constraintLeft_toRightOf="@id/tc_time"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_weather"
+            style="@style/TXZWeatherInfoTextViewStyle"
+            android:layout_marginTop="5dp"
+            android:text="晴天 25°"
+            app:layout_constraintBottom_toBottomOf="@id/tc_data"
+            app:layout_constraintLeft_toLeftOf="@id/iv_weather"
+            app:layout_constraintRight_toRightOf="@id/iv_weather" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/iv_bluetooth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:divider="@drawable/transparent_dividing_verticall_line"
-        android:orientation="horizontal"
-        android:showDividers="middle">
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/cl_weather"
-            android:layout_width="583dp"
-            android:layout_height="195dp"
-            android:layout_gravity="center"
-            android:background="@drawable/ic_time_weather_bg"
-            android:orientation="horizontal"
-            android:paddingStart="25dp">
-
-            <TextClock
-                android:id="@+id/tc_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:format12Hour="HH:mm"
-                android:format24Hour="HH:mm"
-                android:textColor="#ffffff"
-                android:textSize="90sp"
-                app:layout_constraintBottom_toTopOf="@id/iv_gps_icon"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/iv_weather"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/iv_gps_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/iv_qs_gps_disable"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="@id/tc_time"
-                app:layout_constraintRight_toLeftOf="@id/tv_city"
-                app:layout_constraintTop_toBottomOf="@id/tc_time" />
-
-            <TextView
-                android:id="@+id/tv_city"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="深圳市"
-                android:textColor="@color/colorWhite"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/iv_gps_icon"
-                app:layout_constraintRight_toLeftOf="@id/tc_data"
-                app:layout_constraintTop_toBottomOf="@id/tc_time" />
-
-            <TextClock
-                android:id="@+id/tc_data"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="20dp"
-                android:format12Hour="EEEE  yyyy年M月dd日"
-                android:format24Hour="EEEE  yyyy年M月dd日"
-                android:textColor="@color/colorWhite"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/tv_city"
-                app:layout_constraintRight_toRightOf="@id/tc_time"
-                app:layout_constraintTop_toBottomOf="@id/tc_time" />
-
-            <ImageView
-                android:id="@+id/iv_weather"
-                android:layout_width="140dp"
-                android:layout_height="110dp"
-                android:src="@drawable/ic_weather_sunny_day"
-                app:layout_constraintBottom_toTopOf="@id/tv_weather"
-                app:layout_constraintLeft_toRightOf="@id/tc_time"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_weather"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="晴天"
-                android:textColor="#ffffff"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@id/tc_data"
-                app:layout_constraintLeft_toLeftOf="@id/iv_weather"
-                app:layout_constraintRight_toRightOf="@id/iv_weather" />
-
-        </android.support.constraint.ConstraintLayout>
+        android:layout_marginEnd="@dimen/homeItemMargin"
+        android:layout_marginBottom="3.5dp"
+        android:background="?android:attr/selectableItemBackground"
+        app:layout_constraintBottom_toTopOf="@id/gl_center"
+        app:layout_constraintLeft_toRightOf="@+id/cl_weather"
+        app:layout_constraintRight_toLeftOf="@id/iv_cloud_service">
 
         <ImageView
-            android:id="@+id/iv_bluetooth"
             style="@style/HomeImageViewStyle"
-            android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/icon_bx_home_bt" />
+            android:src="@drawable/icon_bx_home_bt_normal" />
 
-        <ImageView
-            android:id="@+id/iv_cloud_service"
-            style="@style/HomeImageViewStyle"
-            android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/icon_bx_home_service" />
-    </LinearLayout>
+        <TextView
+            style="@style/HomeTextStyle"
+            android:text="@string/home_title_bt" />
+    </FrameLayout>
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/iv_cloud_service"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:divider="@drawable/transparent_dividing_verticall_line"
+        android:layout_marginBottom="3.5dp"
+        android:background="?android:attr/selectableItemBackground"
+        app:layout_constraintBottom_toTopOf="@+id/gl_center"
+        app:layout_constraintLeft_toRightOf="@+id/iv_bluetooth"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <ImageView
+            style="@style/HomeImageViewStyle"
+            android:src="@drawable/icon_bx_home_file_normal" />
+
+        <TextView
+            style="@style/HomeTextStyle"
+            android:text="@string/home_title_file" />
+    </FrameLayout>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/gl_center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:showDividers="middle">
+        app:layout_constraintGuide_percent="0.5" />
+
+    <FrameLayout
+        android:id="@+id/iv_navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3.5dp"
+        android:layout_marginEnd="@dimen/homeItemMargin"
+        android:background="?android:attr/selectableItemBackground"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/iv_recorder"
+        app:layout_constraintTop_toBottomOf="@+id/gl_center">
 
         <ImageView
-            android:id="@+id/iv_navigation"
             style="@style/HomeImageViewStyle"
-            android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/icon_bx_home_navigation" />
+            android:src="@drawable/icon_bx_home_navigation_normal" />
+
+        <TextView
+            style="@style/HomeTextStyle"
+            android:text="@string/home_title_navigation" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/iv_recorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/homeItemMargin"
+        android:background="?android:attr/selectableItemBackground"
+        app:layout_constraintLeft_toRightOf="@id/iv_navigation"
+        app:layout_constraintRight_toLeftOf="@id/iv_music"
+        app:layout_constraintTop_toTopOf="@id/iv_navigation">
 
         <ImageView
-            android:id="@+id/iv_recorder"
             style="@style/HomeImageViewStyle"
-            android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/icon_bx_home_record" />
+            android:src="@drawable/icon_bx_home_record_normal" />
+
+        <TextView
+            style="@style/HomeTextStyle"
+            android:text="@string/home_title_record" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/iv_music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/homeItemMargin"
+        android:background="?android:attr/selectableItemBackground"
+        app:layout_constraintLeft_toRightOf="@+id/iv_recorder"
+        app:layout_constraintRight_toLeftOf="@id/iv_fm"
+        app:layout_constraintTop_toTopOf="@id/iv_navigation">
 
         <ImageView
-            android:id="@+id/iv_music"
             style="@style/HomeImageViewStyle"
-            android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/icon_bx_home_music" />
+            android:src="@drawable/icon_bx_home_music_normal" />
+
+        <TextView
+            style="@style/HomeTextStyle"
+            android:text="@string/home_title_music" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/iv_fm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/homeItemMargin"
+        android:background="?android:attr/selectableItemBackground"
+        app:layout_constraintLeft_toRightOf="@+id/iv_music"
+        app:layout_constraintRight_toLeftOf="@id/iv_app"
+        app:layout_constraintTop_toTopOf="@id/iv_navigation">
 
         <ImageView
-            android:id="@+id/iv_fm"
             style="@style/HomeImageViewStyle"
-            android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/icon_bx_home_fm" />
+            android:src="@drawable/icon_bx_home_fm_normal" />
+
+        <TextView
+            style="@style/HomeTextStyle"
+            android:text="@string/home_title_fm" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/iv_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        app:layout_constraintLeft_toRightOf="@+id/iv_fm"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_navigation">
 
         <ImageView
-            android:id="@+id/iv_playback"
             style="@style/HomeImageViewStyle"
-            android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/icon_bx_home_record"
-            android:visibility="gone" />
+            android:src="@drawable/icon_bx_home_app_normal" />
 
-        <ImageView
-            android:id="@+id/iv_app"
-            style="@style/HomeImageViewStyle"
-            android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/icon_bx_home_app" />
-    </LinearLayout>
-</LinearLayout>
+        <TextView
+            style="@style/HomeTextStyle"
+            android:text="@string/home_title_app" />
+    </FrameLayout>
+
+</android.support.constraint.ConstraintLayout>

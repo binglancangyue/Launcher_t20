@@ -13,6 +13,7 @@ import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,7 +60,9 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         init();
         initView();
         getFileData();
-        mHandler.sendEmptyMessageDelayed(2, 4000);
+        if (!CustomValue.IS_ENGLISH) {
+            mHandler.sendEmptyMessageDelayed(2, 4000);
+        }
         mHandler.sendEmptyMessageDelayed(3, 4000);
     }
 
@@ -84,17 +87,22 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
     }
 
     private void initView() {
-        ImageView ivNavigation = findViewById(R.id.iv_navigation);
-        ImageView ivRecorder = findViewById(R.id.iv_recorder);
-        ImageView ivCloudService = findViewById(R.id.iv_cloud_service);
-        ImageView ivFM = findViewById(R.id.iv_fm);
-        ImageView ivBluetooth = findViewById(R.id.iv_bluetooth);
-        ImageView ivMusic = findViewById(R.id.iv_music);
-        ImageView ivPlayback = findViewById(R.id.iv_playback);
-        ImageView ivAPP = findViewById(R.id.iv_app);
+        FrameLayout ivNavigation = findViewById(R.id.iv_navigation);
+        FrameLayout ivRecorder = findViewById(R.id.iv_recorder);
+        FrameLayout ivCloudService = findViewById(R.id.iv_cloud_service);
+        FrameLayout ivFM = findViewById(R.id.iv_fm);
+        FrameLayout ivBluetooth = findViewById(R.id.iv_bluetooth);
+        FrameLayout ivMusic = findViewById(R.id.iv_music);
+        FrameLayout ivAPP = findViewById(R.id.iv_app);
         ivWeatherIcon = findViewById(R.id.iv_weather);
         tvWeather = findViewById(R.id.tv_weather);
+
         tvCurrentCity = findViewById(R.id.tv_city);
+        if (CustomValue.IS_ENGLISH) {
+            ivWeatherIcon.setVisibility(View.GONE);
+            tvWeather.setVisibility(View.GONE);
+            tvCurrentCity.setVisibility(View.GONE);
+        }
         ConstraintLayout constraintLayout = findViewById(R.id.cl_weather);
         constraintLayout.setOnClickListener(this);
 
@@ -104,7 +112,6 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         ivFM.setOnClickListener(this);
         ivBluetooth.setOnClickListener(this);
         ivMusic.setOnClickListener(this);
-        ivPlayback.setOnClickListener(this);
         ivAPP.setOnClickListener(this);
     }
 
@@ -118,27 +125,37 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_navigation: // 高德导航
-                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_AUTONAVI);
+                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_AUTONAVI, "高德地图");
                 break;
             case R.id.iv_recorder: // 记录仪
-                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_DVR);
+                if (CustomValue.NOT_DVR) {
+                    Intent intent = new Intent();
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    intent.setAction("android.intent.action.MAIN");
+                    ComponentName cn = new ComponentName("com.android.settings", "com.android.settings.Settings$TetherSettingsActivity");
+                    intent.setComponent(cn);
+                    startActivity(intent);
+                } else {
+                    activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_DVR, "记录仪");
+                }
                 break;
             case R.id.iv_cloud_service: // 云服务
+                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_FILE_MANAGER, "任车性");
                 break;
             case R.id.iv_fm: // FM
 //                Intent intent=new Intent(this,SettingsWindowActivity.class);
 //                startActivity(intent);
-                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_FM);
+                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_FM, "FM");
                 break;
             case R.id.iv_bluetooth: // 蓝牙
 //                activityTools.launchAppByPackageName("com.cywl.bt.activity");
                 activityTools.jumpByAction(Settings.ACTION_BLUETOOTH_SETTINGS);
                 break;
             case R.id.iv_music: // 音乐
-                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_KWMUSIC);
+                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_KWMUSIC, "酷我");
                 break;
             case R.id.iv_playback: // 视频回放
-                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_ViDEO_PLAY_BACK);
+                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_ViDEO_PLAY_BACK, "视频回放");
                 break;
             case R.id.cl_weather:
                 getWeather();
@@ -176,7 +193,7 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
     }
 
     public static class InnerHandler extends Handler {
-        private final WeakReference<LauncherHomeActivity> activityWeakReference;
+        private WeakReference<LauncherHomeActivity> activityWeakReference;
         private LauncherHomeActivity activity;
 
         private InnerHandler(LauncherHomeActivity activity) {
@@ -193,6 +210,7 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
             }
             if (msg.what == 3) {
                 activity.startDVR();
+                activity.activityTools.startRCX();
             }
             if (msg.what == 4) {
                 activity.updateWeather();
@@ -287,16 +305,16 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
             compositeDisposable.clear();
         }
 
-        if (mWeatherReceiver != null) {
-            unregisterReceiver(mWeatherReceiver);
+        if (!CustomValue.IS_ENGLISH) {
+            if (mWeatherReceiver != null) {
+                unregisterReceiver(mWeatherReceiver);
+            }
         }
 
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
         }
-
-
     }
 
 }

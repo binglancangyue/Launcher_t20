@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.bixin.launcher_t20.R;
 import com.bixin.launcher_t20.adapter.RecyclerGridViewAdapter;
@@ -79,6 +81,12 @@ public class AppListActivity extends RxActivity implements OnRecyclerViewItemLis
 
     private void initView() {
         recyclerView = findViewById(R.id.rcv_app);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemViewCacheSize(15);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        //取消动画,避免更新图片闪烁
+        ((DefaultItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         GridLayoutManager manager = new GridLayoutManager(this, 5);
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
@@ -108,16 +116,16 @@ public class AppListActivity extends RxActivity implements OnRecyclerViewItemLis
 
     public void getAppList(ObservableEmitter<Boolean> emitter) {
         appInfoArrayList.clear();
-//        if (myApplication.getShowAppList().size() <= 3) {
-        myApplication.initAppList();
-//        }
+        if (myApplication.getShowAppList().size() <= 6 || myApplication.getShowAppList().size() > 20) {
+            myApplication.initAppList();
+        }
         appInfoArrayList = myApplication.getShowAppList();
         emitter.onNext(true);
     }
 
     @Override
     public void onItemClickListener(int position, String packageName) {
-        mActivityTools.launchAppByPackageName(packageName);
+        mActivityTools.launchAppByPackageName(packageName,"null");
     }
 
     @Override

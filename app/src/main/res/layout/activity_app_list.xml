@@ -7,6 +7,6 @@
     android:layout_gravity="center"
     android:overScrollMode="never"
     android:background="@drawable/icon_bx_app_list_bg"
-    android:paddingTop="20dp"
+    android:paddingTop="@dimen/applistViewPaddingTop"
     android:scrollbars="none"
     app:spanCount="5" />

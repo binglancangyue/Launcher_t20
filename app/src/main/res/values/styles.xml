@@ -18,6 +18,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="TranslucentTheme" parent="Theme.Design.NoActionBar">
+        <item name="android:windowBackground">@null</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <!--Android 5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色-->
@@ -155,4 +156,21 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="TXZWeatherInfoTextViewStyle">
+        <item name="android:textSize">@dimen/txzWeatherInfoTextSize</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="HomeTextStyle">
+        <item name="android:layout_marginBottom">6dp</item>
+        <item name="android:layout_gravity">bottom|center_horizontal</item>
+        <item name="android:textSize">@dimen/homeTextSize</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <dimen name="homeTextSize">25sp</dimen>
 </resources>

@@ -16,4 +16,13 @@
     <dimen name="testSpacing">10dp</dimen>
     <dimen name="popupWindowSeekBarMargin">15dp</dimen>
     <dimen name="seekBarPadding">20dp</dimen>
+    <dimen name="txzWeatherInfoTextSize">19sp</dimen>
+    <dimen name="weatherViewWidth">584dp</dimen>
+    <dimen name="weatherViewHeight">195dp</dimen>
+    <dimen name="homeItemMargin">3.5dp</dimen>
+    <dimen name="homeTimeTextSize">95sp</dimen>
+    <dimen name="homeDataTextSize">24sp</dimen>
+    <dimen name="homeWeatherPaddingStart">25dp</dimen>
+    <dimen name="homeWeatherPaddingBottom">15dp</dimen>
+    <dimen name="applistViewPaddingTop">20dp</dimen>
 </resources>

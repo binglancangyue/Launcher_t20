@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.LauncherApps;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -64,6 +65,25 @@ public class StartActivityTool {
         }
     }
 
+    /**
+     * 根据包名启动应用
+     *
+     * @param packageName clicked app
+     */
+    public void launchAppByPackageName(String packageName, String name) {
+        if (TextUtils.isEmpty(packageName)) {
+            Log.i(TAG, "package name is null!");
+            return;
+        }
+
+        Intent launchIntent = mContext.getPackageManager().getLaunchIntentForPackage(packageName);
+        if (launchIntent == null) {
+            ToastTool.showToast(R.string.app_not_install);
+        } else {
+            mContext.startActivity(launchIntent);
+            sendBToRCX(packageName, name);
+        }
+    }
 
     /**
      * 根据包名启动应用
@@ -201,7 +221,7 @@ public class StartActivityTool {
                 break;
             case "小雨":
             case "雨":
-                iconId = R.drawable.ic_weather_shower;
+                iconId = R.drawable.ic_weather_light_rain;
                 break;
             case "中雨":
                 iconId = R.drawable.ic_weather_moderate_rain;
@@ -260,6 +280,22 @@ public class StartActivityTool {
 
         }
         return iconId;
+    }
+
+    public void startRCX() {
+        LauncherApplication.getInstance().startService(new Intent()
+                .setClassName("com.mapgoo.diruite", "com.mapgoo.smart.service.DataSyncServiceSDK"));
+    }
+
+    public void sendBToRCX(String packageName, String name) {
+        Intent intent = new Intent();
+        intent.setAction("com.mapgoo.broadcast.recv.renchexing");
+        intent.putExtra("KEY_TYPE", 10017);
+        intent.putExtra("EXTRA_PKG", packageName);
+        intent.putExtra("EXTRA_NAME", name);
+        intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        intent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+        mContext.sendBroadcast(intent);
     }
 
 }

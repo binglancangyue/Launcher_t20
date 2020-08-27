@@ -34,4 +34,7 @@ public class CustomValue {
     public final static String ACTION_GET_WEATHER = "com.bixin.speechrecognitiontool.action_get_weather";
     public final static String ACTION_UPDATE_WEATHER = "com.bixin.speechrecognitiontool.action_update_weather";
 
+    public final static boolean IS_ENGLISH = false;
+    public final static boolean NOT_DVR = false;
+
 }
