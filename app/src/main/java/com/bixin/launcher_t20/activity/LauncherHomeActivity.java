@@ -140,7 +140,7 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
                 }
                 break;
             case R.id.iv_cloud_service: // 云服务
-                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_FILE_MANAGER, "任车性");
+                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_RCX, "任车性");
                 break;
             case R.id.iv_fm: // FM
 //                Intent intent=new Intent(this,SettingsWindowActivity.class);

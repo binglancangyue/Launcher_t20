@@ -60,14 +60,14 @@ public class LauncherApplication extends Application {
         for (ResolveInfo resolveInfo : apps) {
             AppInfo info = new AppInfo();
             ActivityInfo activityInfo = resolveInfo.activityInfo;
-//            if (ignoreApp(activityInfo.packageName)) {
+            if (ignoreApp(activityInfo.packageName)) {
                 info.setAppName(resolveInfo.loadLabel(pm).toString());
                 info.setPkgName(activityInfo.packageName);
                 info.setFlags(activityInfo.flags);
                 info.setAppIcon(activityInfo.loadIcon(pm));
                 info.setAppIntent(pm.getLaunchIntentForPackage(activityInfo.packageName));
                 mAppList.add(info);
-//            }
+            }
             Log.d("MyApplication",
                     "AppList apps info: " + activityInfo.packageName);
         }
@@ -97,7 +97,7 @@ public class LauncherApplication extends Application {
                 || pkgName.equals(CustomValue.PACKAGE_NAME_GPS)
                 || pkgName.equals(CustomValue.PACKAGE_NAME_MAP_TOOL)
                 || pkgName.equals(CustomValue.PACKAGE_NAME_ViDEO_PLAY_BACK)
-                || pkgName.equals("com.mapgoo.diruite")
+                || pkgName.equals(CustomValue.PACKAGE_NAME_RCX)
                 || pkgName.equals("com.mapgoo.media.dvrx")) {
             return true;
         }
