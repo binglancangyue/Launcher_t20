@@ -25,4 +25,5 @@
     <dimen name="homeWeatherPaddingStart">25dp</dimen>
     <dimen name="homeWeatherPaddingBottom">15dp</dimen>
     <dimen name="applistViewPaddingTop">20dp</dimen>
+    <dimen name="applistViewPaddingBottom">20dp</dimen>
 </resources>

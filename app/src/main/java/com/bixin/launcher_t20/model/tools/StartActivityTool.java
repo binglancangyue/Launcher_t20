@@ -3,21 +3,22 @@ package com.bixin.launcher_t20.model.tools;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.LauncherApps;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.bixin.launcher_t20.R;
-import com.bixin.launcher_t20.activity.LauncherApplication;
+import com.bixin.launcher_t20.activity.LauncherApp;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import static android.support.constraint.Constraints.TAG;
+import static android.content.ContentValues.TAG;
+
 
 /**
  * @author Altair
@@ -28,7 +29,7 @@ public class StartActivityTool {
     private Context mContext;
 
     public StartActivityTool() {
-        this.mContext = LauncherApplication.getInstance();
+        this.mContext = LauncherApp.getInstance();
     }
 
     /**
@@ -283,8 +284,9 @@ public class StartActivityTool {
     }
 
     public void startRCX() {
-        LauncherApplication.getInstance().startService(new Intent()
-                .setClassName("com.mapgoo.diruite", "com.mapgoo.smart.service.DataSyncServiceSDK"));
+        LauncherApp.getInstance().startService(new Intent()
+                .setClassName("com.mapgoo.diruite",
+                        "com.mapgoo.smart.service.DataSyncServiceSDK"));
     }
 
     public void sendBToRCX(String packageName, String name) {
@@ -296,6 +298,15 @@ public class StartActivityTool {
         intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         intent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         mContext.sendBroadcast(intent);
+    }
+
+    public void startECarService() {
+        ComponentName cn = new ComponentName("com.ecar.assistantnew",
+                "com.ecar.assistantnew.service.BootService");
+        Intent intent = new Intent();
+        intent.setComponent(cn);
+        mContext.stopService(intent);
+        mContext.startService(intent);
     }
 
 }

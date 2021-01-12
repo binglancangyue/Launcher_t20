@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.bixin.launcher_t20.model.tools.CustomValue;
-import com.bixin.launcher_t20.model.tools.InterfaceCallBackManagement;
+import com.bixin.launcher_t20.model.tools.CallBackManagement;
 
 /**
  * @author Altair
@@ -23,7 +23,7 @@ public class WeatherReceiver extends BroadcastReceiver {
         Log.d("WeatherReceiver", "onReceive:action " + action);
         if (action.equals(CustomValue.ACTION_UPDATE_WEATHER)) {
             String weather = intent.getStringExtra("weatherInfo");
-            InterfaceCallBackManagement.getInstance().updateWeather(weather);
+            CallBackManagement.getInstance().updateWeather(weather);
         }
     }
 }

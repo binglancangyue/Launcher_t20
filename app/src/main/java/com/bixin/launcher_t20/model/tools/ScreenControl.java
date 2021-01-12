@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.os.PowerManager;
 import android.util.Log;
 
-import com.bixin.launcher_t20.activity.LauncherApplication;
+import com.bixin.launcher_t20.activity.LauncherApp;
 import com.bixin.launcher_t20.model.receiver.ScreenOffAdminReceiver;
 
 import static android.content.Context.DEVICE_POLICY_SERVICE;
@@ -29,7 +29,7 @@ public class ScreenControl {
 
     @SuppressLint("InvalidWakeLockTag")
     public void init() {
-        Context context = LauncherApplication.getInstance();
+        Context context = LauncherApp.getInstance();
         componentName = new ComponentName(context, ScreenOffAdminReceiver.class);
         mPowerManager = (PowerManager) context.getSystemService(POWER_SERVICE);
         policyManager =
@@ -84,7 +84,7 @@ public class ScreenControl {
         Intent intent = new Intent();
         intent.addCategory("android.intent.category.DEFAULT");
         intent.setAction("android.intent.action.VIEW");
-        intent.setData(Uri.parse("package:" + LauncherApplication.getInstance().getPackageName()));
-        LauncherApplication.getInstance().startActivity(intent);
+        intent.setData(Uri.parse("package:" + LauncherApp.getInstance().getPackageName()));
+        LauncherApp.getInstance().startActivity(intent);
     }
 }

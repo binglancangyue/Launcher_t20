@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class LauncherApplication extends Application {
-    private static LauncherApplication myApplication = null;
+public class LauncherApp extends Application {
+    private static LauncherApp myApplication = null;
     public ArrayList<AppInfo> mAppList = new ArrayList<>();
 
     @Override
@@ -28,7 +28,7 @@ public class LauncherApplication extends Application {
 //        init();
     }
 
-    public static LauncherApplication getInstance() {
+    public static LauncherApp getInstance() {
         return myApplication;
     }
 
@@ -48,19 +48,17 @@ public class LauncherApplication extends Application {
     /**
      * 获得所有安装的APP
      */
-    public void initAppList() {
-        if (mAppList.size() > 0) {
-            mAppList.clear();
-        }
+    public ArrayList<AppInfo> initAppList() {
+        mAppList.clear();
         PackageManager pm = getPackageManager();
         Intent main = new Intent(Intent.ACTION_MAIN, null);
         main.addCategory(Intent.CATEGORY_LAUNCHER);
         final List<ResolveInfo> apps = pm.queryIntentActivities(main, 0);
-        Collections.sort(apps, new ResolveInfo.DisplayNameComparator(pm));
+//        Collections.sort(apps, new ResolveInfo.DisplayNameComparator(pm));
         for (ResolveInfo resolveInfo : apps) {
             AppInfo info = new AppInfo();
             ActivityInfo activityInfo = resolveInfo.activityInfo;
-            if (ignoreApp(activityInfo.packageName)) {
+            if (!ignoreApp(activityInfo.packageName)) {
                 info.setAppName(resolveInfo.loadLabel(pm).toString());
                 info.setPkgName(activityInfo.packageName);
                 info.setFlags(activityInfo.flags);
@@ -71,13 +69,11 @@ public class LauncherApplication extends Application {
             Log.d("MyApplication",
                     "AppList apps info: " + activityInfo.packageName);
         }
+        return mAppList;
     }
 
     public ArrayList<AppInfo> getShowAppList() {
-        if (mAppList.size() <= 0) {
-            initAppList();
-        }
-        return mAppList;
+        return initAppList();
     }
 
     /**
@@ -86,7 +82,7 @@ public class LauncherApplication extends Application {
      * @param pkgName 包名
      * @return true or false
      */
-    private boolean ignoreApp(String pkgName) {
+/*    private boolean ignoreApp(String pkgName) {
         if (pkgName.equals(CustomValue.PACKAGE_NAME_AUTONAVI)
                 || pkgName.equals(CustomValue.PACKAGE_NAME_KWMUSIC)
                 || pkgName.equals(CustomValue.PACKAGE_NAME_SETTINGS)
@@ -99,6 +95,15 @@ public class LauncherApplication extends Application {
                 || pkgName.equals(CustomValue.PACKAGE_NAME_ViDEO_PLAY_BACK)
                 || pkgName.equals(CustomValue.PACKAGE_NAME_RCX)
                 || pkgName.equals("com.mapgoo.media.dvrx")) {
+            return true;
+        }
+        return false;
+    }*/
+    private boolean ignoreApp(String pkgName) {
+        if (pkgName.equals("com.bixin.launcher_t20")
+                || pkgName.equals("com.bixin.speechrecognitiontool")
+                || pkgName.equals("com.txznet.adapter")
+                || pkgName.equals(CustomValue.PACKAGE_NAME_SOHU)) {
             return true;
         }
         return false;

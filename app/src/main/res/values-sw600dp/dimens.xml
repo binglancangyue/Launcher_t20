@@ -24,4 +24,5 @@
     <dimen name="homeWeatherPaddingBottom">15dp</dimen>
     <dimen name="homeTextSize">25sp</dimen>
     <dimen name="applistViewPaddingTop">20dp</dimen>
+    <dimen name="applistViewPaddingBottom">35dp</dimen>
 </resources>

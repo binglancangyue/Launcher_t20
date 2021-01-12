@@ -9,16 +9,16 @@ import com.bixin.launcher_t20.model.listener.OnLocationListener;
  * @date :2020.04.01 上午 10:23
  * @description:
  */
-public class InterfaceCallBackManagement {
+public class CallBackManagement {
     private OnLocationListener mOnLocationListener;
     private OnAppUpdateListener mOnAppUpdateListener;
 
-    public static InterfaceCallBackManagement getInstance() {
+    public static CallBackManagement getInstance() {
         return SingleHolder.management;
     }
 
     public static class SingleHolder {
-        static InterfaceCallBackManagement management = new InterfaceCallBackManagement();
+        static CallBackManagement management = new CallBackManagement();
     }
 
     public void setOnAppUpdateListener(OnAppUpdateListener onAppUpdateListener) {

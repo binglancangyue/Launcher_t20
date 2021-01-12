@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.bixin.launcher_t20.activity.LauncherApplication;
+import com.bixin.launcher_t20.activity.LauncherApp;
 
 import static com.bixin.launcher_t20.model.tools.CustomValue.SP_NAME;
 
@@ -20,7 +20,7 @@ public class SharedPreferencesTool {
 
     @SuppressLint("CommitPrefEdits")
     public SharedPreferencesTool() {
-        this.mContext = LauncherApplication.getInstance();
+        this.mContext = LauncherApp.getInstance();
         this.mPreferences = mContext.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
         this.mEditor = mPreferences.edit();
     }

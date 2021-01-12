@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/icon_bx_home_bg"
-    android:paddingBottom="40dp">
+    android:background="@drawable/icon_bx_home_bg">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/cl_weather"
@@ -120,10 +119,12 @@
         app:layout_constraintRight_toRightOf="parent">
 
         <ImageView
+            android:id="@+id/iv_service"
             style="@style/HomeImageViewStyle"
             android:src="@drawable/icon_bx_home_service_normal" />
 
         <TextView
+            android:id="@+id/tv_service"
             style="@style/HomeTextStyle"
             android:text="@string/home_title_cloud" />
     </FrameLayout>
@@ -167,10 +168,12 @@
         app:layout_constraintTop_toTopOf="@id/iv_navigation">
 
         <ImageView
+            android:id="@+id/iv_record"
             style="@style/HomeImageViewStyle"
             android:src="@drawable/icon_bx_home_record_normal" />
 
         <TextView
+            android:id="@+id/tv_record"
             style="@style/HomeTextStyle"
             android:text="@string/home_title_record" />
     </FrameLayout>

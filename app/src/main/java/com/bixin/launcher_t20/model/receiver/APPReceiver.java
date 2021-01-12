@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.bixin.launcher_t20.activity.LauncherApplication;
-import com.bixin.launcher_t20.model.tools.InterfaceCallBackManagement;
+import com.bixin.launcher_t20.activity.LauncherApp;
+import com.bixin.launcher_t20.model.tools.CallBackManagement;
 
 /**
  * @author Altair
@@ -23,8 +23,8 @@ public class APPReceiver extends BroadcastReceiver {
         Log.d("APPReceiver", "onReceive:action:" + action + ";");
         if (action.equals(Intent.ACTION_PACKAGE_REMOVED) ||
                 action.equals(Intent.ACTION_PACKAGE_ADDED)) {
-            LauncherApplication.getInstance().initAppList();
-            InterfaceCallBackManagement.getInstance().updateAppList();
+            LauncherApp.getInstance().initAppList();
+            CallBackManagement.getInstance().updateAppList();
         }
     }
 }

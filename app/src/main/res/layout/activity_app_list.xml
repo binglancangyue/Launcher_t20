@@ -8,5 +8,6 @@
     android:overScrollMode="never"
     android:background="@drawable/icon_bx_app_list_bg"
     android:paddingTop="@dimen/applistViewPaddingTop"
+    android:paddingBottom="@dimen/applistViewPaddingBottom"
     android:scrollbars="none"
     app:spanCount="5" />

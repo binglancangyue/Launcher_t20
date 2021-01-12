@@ -2,13 +2,14 @@ package com.bixin.launcher_t20.activity;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -23,10 +24,9 @@ import com.bixin.launcher_t20.model.bean.WeatherBean;
 import com.bixin.launcher_t20.model.listener.OnLocationListener;
 import com.bixin.launcher_t20.model.receiver.WeatherReceiver;
 import com.bixin.launcher_t20.model.tools.CustomValue;
-import com.bixin.launcher_t20.model.tools.InterfaceCallBackManagement;
+import com.bixin.launcher_t20.model.tools.CallBackManagement;
 import com.bixin.launcher_t20.model.tools.StartActivityTool;
 import com.trello.rxlifecycle2.android.ActivityEvent;
-import com.trello.rxlifecycle2.components.RxActivity;
 
 import java.lang.ref.WeakReference;
 
@@ -34,15 +34,12 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class LauncherHomeActivity extends RxActivity implements View.OnClickListener, OnLocationListener {
+public class LauncherHomeActivity extends BaseActivity implements View.OnClickListener, OnLocationListener {
     private static final String TAG = "HomeActivity";
-    private Context mContext;
-    private LauncherApplication myApplication;
-    private CompositeDisposable compositeDisposable;
+    private LauncherApp myApplication;
     public InnerHandler mHandler;
     private StartActivityTool activityTools;
     private WeatherReceiver mWeatherReceiver;
@@ -53,40 +50,34 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
     private static final int MIN_CLICK_DELAY_TIME = 5000;
     private static long lastClickTime;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_layout_weather);
-        init();
-        initView();
-        getFileData();
+//        getFileData();
         if (!CustomValue.IS_ENGLISH) {
             mHandler.sendEmptyMessageDelayed(2, 4000);
+            mHandler.sendEmptyMessageDelayed(3, 6000);
+            mHandler.sendEmptyMessageDelayed(6, 8000);
         }
-        mHandler.sendEmptyMessageDelayed(3, 4000);
     }
 
-/*    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            //do something.
-            return true;
-        } else {
-            return super.dispatchKeyEvent(event);
-        }
-    }*/
+    @Override
+    public int getLayout() {
+        return R.layout.activity_home_layout_weather;
+    }
 
-    private void init() {
-        mContext = this;
-        myApplication = (LauncherApplication) getApplication();
-        compositeDisposable = new CompositeDisposable();
+    @Override
+    public void init() {
+        myApplication = (LauncherApp) getApplication();
         mHandler = new InnerHandler(this);
         activityTools = new StartActivityTool();
-        InterfaceCallBackManagement.getInstance().setOnLocationListener(this);
+        CallBackManagement.getInstance().setOnLocationListener(this);
         mWeatherReceiver = new WeatherReceiver();
     }
 
-    private void initView() {
+    @Override
+    public void initView() {
         FrameLayout ivNavigation = findViewById(R.id.iv_navigation);
         FrameLayout ivRecorder = findViewById(R.id.iv_recorder);
         FrameLayout ivCloudService = findViewById(R.id.iv_cloud_service);
@@ -102,6 +93,24 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
             ivWeatherIcon.setVisibility(View.GONE);
             tvWeather.setVisibility(View.GONE);
             tvCurrentCity.setVisibility(View.GONE);
+            TextView tvService = findViewById(R.id.tv_service);
+            ImageView ivService = findViewById(R.id.iv_service);
+            ImageView ivGPSIcon = findViewById(R.id.iv_gps_icon);
+            ivGPSIcon.setVisibility(View.GONE);
+            tvService.setText(R.string.home_title_file);
+            ivService.setImageResource(R.drawable.icon_bx_home_file_normal);
+        }
+        if (CustomValue.NOT_CLOUD_SERVICE) {
+            TextView tvService = findViewById(R.id.tv_service);
+            ImageView ivService = findViewById(R.id.iv_service);
+            tvService.setText(R.string.home_title_file);
+            ivService.setImageResource(R.drawable.icon_bx_home_file_normal);
+        }
+        if (CustomValue.NOT_DVR) {
+            TextView tvRecord = findViewById(R.id.tv_record);
+            ImageView ivRecord = findViewById(R.id.iv_record);
+            tvRecord.setText(R.string.home_title_hotspot);
+            ivRecord.setImageResource(R.drawable.icon_bx_home_hotspot_normal);
         }
         ConstraintLayout constraintLayout = findViewById(R.id.cl_weather);
         constraintLayout.setOnClickListener(this);
@@ -125,22 +134,34 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_navigation: // 高德导航
-                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_AUTONAVI, "高德地图");
+                if (CustomValue.IS_ENGLISH) {
+                    activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_MAPS, "google地图");
+                } else {
+                    activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_AUTONAVI, "高德地图");
+                }
                 break;
             case R.id.iv_recorder: // 记录仪
                 if (CustomValue.NOT_DVR) {
                     Intent intent = new Intent();
                     intent.addCategory(Intent.CATEGORY_DEFAULT);
                     intent.setAction("android.intent.action.MAIN");
-                    ComponentName cn = new ComponentName("com.android.settings", "com.android.settings.Settings$TetherSettingsActivity");
+                    ComponentName cn = new ComponentName("com.android.settings",
+                            "com.android.settings.Settings$TetherSettingsActivity");
                     intent.setComponent(cn);
                     startActivity(intent);
                 } else {
                     activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_DVR, "记录仪");
+//                    activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_RCX_DVR, "记录仪");
                 }
                 break;
             case R.id.iv_cloud_service: // 云服务
-                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_RCX, "任车性");
+                if (CustomValue.IS_ENGLISH || CustomValue.NOT_CLOUD_SERVICE) {
+                    activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_ESTRONGS, "文件管理器");
+                } else if (CustomValue.IS_E_CAR) {
+                    activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_E_CAR);
+                } else {
+                    activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_RCX, "任车性");
+                }
                 break;
             case R.id.iv_fm: // FM
 //                Intent intent=new Intent(this,SettingsWindowActivity.class);
@@ -150,9 +171,14 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
             case R.id.iv_bluetooth: // 蓝牙
 //                activityTools.launchAppByPackageName("com.cywl.bt.activity");
                 activityTools.jumpByAction(Settings.ACTION_BLUETOOTH_SETTINGS);
+//                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_BLUETOOTH);
                 break;
             case R.id.iv_music: // 音乐
-                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_KWMUSIC, "酷我");
+                if (CustomValue.IS_ENGLISH) {
+                    activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_SPOTIFY, "google音乐");
+                } else {
+                    activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_KWMUSIC, "酷我");
+                }
                 break;
             case R.id.iv_playback: // 视频回放
                 activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_ViDEO_PLAY_BACK, "视频回放");
@@ -183,6 +209,7 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         }
     }
 
+
     private void updateWeather() {
         String cityName = weatherBean.getCityName();
         String weather = weatherBean.getWeather();
@@ -193,11 +220,10 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
     }
 
     public static class InnerHandler extends Handler {
-        private WeakReference<LauncherHomeActivity> activityWeakReference;
         private LauncherHomeActivity activity;
 
         private InnerHandler(LauncherHomeActivity activity) {
-            this.activityWeakReference = new WeakReference<>(activity);
+            WeakReference<LauncherHomeActivity> activityWeakReference = new WeakReference<>(activity);
             this.activity = activityWeakReference.get();
         }
 
@@ -205,15 +231,21 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 2) {
+                activity.startDVR();
+            }
+            if (msg.what == 3) {
                 activity.registerWeatherReceiver();
                 activity.activityTools.startVoiceRecognitionService();
             }
-            if (msg.what == 3) {
-                activity.startDVR();
-                activity.activityTools.startRCX();
-            }
             if (msg.what == 4) {
                 activity.updateWeather();
+            }
+            if (msg.what == 5) {
+                activity.startDVR();
+            }
+            if (msg.what == 6) {
+                activity.activityTools.startRCX();
+//                activity.activityTools.startECarService();
             }
         }
     }
@@ -236,7 +268,7 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
     }
 
     private void initAppInfo() {
-        compositeDisposable.add(Observable.create(new ObservableOnSubscribe<Boolean>() {
+        mDisposable.add(Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> emitter) throws Exception {
                 myApplication.initAppList();
@@ -253,7 +285,6 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
     @SuppressLint("NewApi")
     private void getFileData() {
         getWindow().getDecorView().post(() -> mHandler.post(() -> {
-            initAppInfo();
 //            mScreenControl = new ScreenControl();
 //            mScreenControl.init();
 //            mScreenControl.checkAndTurnOnDeviceManager(this);
@@ -261,12 +292,11 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
 //            RequestPermissionsTool requestPermissionsTools = new RequestPermissionsTool();
 //            requestPermissionsTools.requestPermissions(HomeActivity.this,
 //                    new String[]{KILL_BACKGROUND_PROCESSES});
-
         }));
     }
 
     private void startDVR() {
-        Intent intent = new Intent();
+/*        Intent intent = new Intent();
         String packageName = "com.bx.carDVR";
         String className = "com.bx.carDVR.DVRService";
         intent.setComponent(new ComponentName(packageName, className));
@@ -274,6 +304,13 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
             mContext.startService(intent);
         } catch (Exception e) {
             Log.e(TAG, "startDVR: " + e.getMessage());
+        }*/
+        Intent launchIntent = mContext.getPackageManager()
+                .getLaunchIntentForPackage(CustomValue.PACKAGE_NAME_DVR);
+        if (launchIntent == null) {
+            mHandler.sendEmptyMessageDelayed(5, 1000);
+        } else {
+            mContext.startActivity(launchIntent);
         }
     }
 
@@ -300,21 +337,16 @@ public class LauncherHomeActivity extends RxActivity implements View.OnClickList
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy: ");
-        if (compositeDisposable != null && !compositeDisposable.isDisposed()) {
-            compositeDisposable.dispose();
-            compositeDisposable.clear();
+        if (mWeatherReceiver != null) {
+            unregisterReceiver(mWeatherReceiver);
+            mWeatherReceiver = null;
         }
-
-        if (!CustomValue.IS_ENGLISH) {
-            if (mWeatherReceiver != null) {
-                unregisterReceiver(mWeatherReceiver);
-            }
-        }
-
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
         }
+        myApplication = null;
+        activityTools = null;
     }
 
 }
