@@ -23,11 +23,13 @@ import com.bixin.launcher_t20.R;
 import com.bixin.launcher_t20.model.bean.WeatherBean;
 import com.bixin.launcher_t20.model.listener.OnLocationListener;
 import com.bixin.launcher_t20.model.receiver.WeatherReceiver;
-import com.bixin.launcher_t20.model.tools.CustomValue;
 import com.bixin.launcher_t20.model.tools.CallBackManagement;
+import com.bixin.launcher_t20.model.tools.CustomValue;
 import com.bixin.launcher_t20.model.tools.StartActivityTool;
+import com.bixin.launcher_t20.model.tools.StoragePaTool;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 
 import io.reactivex.Observable;
@@ -60,6 +62,9 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
             mHandler.sendEmptyMessageDelayed(3, 6000);
             mHandler.sendEmptyMessageDelayed(6, 8000);
         }
+        if (CustomValue.IS_START_TEST_APP){
+            mHandler.sendEmptyMessageDelayed(7, 12000);
+        }
     }
 
     @Override
@@ -73,7 +78,6 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
         mHandler = new InnerHandler(this);
         activityTools = new StartActivityTool();
         CallBackManagement.getInstance().setOnLocationListener(this);
-        mWeatherReceiver = new WeatherReceiver();
     }
 
     @Override
@@ -125,6 +129,7 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void registerWeatherReceiver() {
+        mWeatherReceiver = new WeatherReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(CustomValue.ACTION_UPDATE_WEATHER);
         registerReceiver(mWeatherReceiver, filter);
@@ -230,22 +235,27 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.what == 2) {
-                activity.startDVR();
-            }
-            if (msg.what == 3) {
-                activity.registerWeatherReceiver();
-                activity.activityTools.startVoiceRecognitionService();
-            }
-            if (msg.what == 4) {
-                activity.updateWeather();
-            }
-            if (msg.what == 5) {
-                activity.startDVR();
-            }
-            if (msg.what == 6) {
-                activity.activityTools.startRCX();
+            switch (msg.what) {
+                case 2:
+                    activity.startDVR();
+                    break;
+                case 3:
+                    activity.registerWeatherReceiver();
+                    activity.activityTools.startVoiceRecognitionService();
+                    break;
+                case 4:
+                    activity.updateWeather();
+                    break;
+                case 5:
+                    activity.startDVR();
+                    break;
+                case 6:
+                    activity.activityTools.startRCX();
 //                activity.activityTools.startECarService();
+                    break;
+                case 7:
+                    activity.startValidationTools();
+                    break;
             }
         }
     }
@@ -314,6 +324,28 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
+    public void startValidationTools() {
+        if (!CustomValue.IS_START_TEST_APP) {
+            return;
+        }
+        String path = StoragePaTool.getStoragePath(true);
+        Log.d(TAG, "startValidationTools: " + path);
+        if (path != null) {
+            path = path + "/BixinTest";
+            File file = new File(path);
+            if (file.exists()) {
+                Intent intent = new Intent();
+                ComponentName cn = new ComponentName("com.sprd.validationtools",
+                        "com.sprd.validationtools.ValidationToolsMainActivity");
+                intent.setComponent(cn);
+                mContext.startActivity(intent);
+                Log.d(TAG, "startValidationTools: OK");
+            } else {
+                Log.d(TAG, "startValidationTools: !exists");
+            }
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -338,7 +370,11 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
         super.onDestroy();
         Log.d(TAG, "onDestroy: ");
         if (mWeatherReceiver != null) {
-            unregisterReceiver(mWeatherReceiver);
+            try {
+                unregisterReceiver(mWeatherReceiver);
+            } catch (Exception e) {
+                Log.d(TAG, "onDestroy:e " + e.getMessage());
+            }
             mWeatherReceiver = null;
         }
         if (mHandler != null) {

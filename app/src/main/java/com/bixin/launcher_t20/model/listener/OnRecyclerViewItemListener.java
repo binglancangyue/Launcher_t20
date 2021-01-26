@@ -7,4 +7,6 @@ package com.bixin.launcher_t20.model.listener;
  */
 public interface OnRecyclerViewItemListener {
     void onItemClickListener(int position, String packageName);
+
+    void onItemLongClickListener(int position, String packageName);
 }

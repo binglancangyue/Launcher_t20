@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.bixin.launcher_t20">
+    coreApp="true"
+    package="com.bixin.launcher_t20"
+    android:sharedUserId="android.uid.system">
     <!--        android:defaultToDeviceProtectedStorage="true"
             android:directBootAware="true"-->
     <application

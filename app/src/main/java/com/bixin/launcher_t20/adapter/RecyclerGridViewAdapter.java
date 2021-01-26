@@ -85,6 +85,15 @@ public class RecyclerGridViewAdapter extends RecyclerView.Adapter<RecyclerGridVi
                         gridViewAdapter.mListener.onItemClickListener(position, packageName);
                     }
                 });
+//                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+//                    @Override
+//                    public boolean onLongClick(View v) {
+//                        int position = getAdapterPosition();
+//                        String packageName = adapter.mData.get(position).getPkgName();
+//                        gridViewAdapter.mListener.onItemLongClickListener(position, packageName);
+//                        return true;
+//                    }
+//                });
             }
         }
     }
