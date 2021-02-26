@@ -42,14 +42,17 @@ public class CustomValue {
     public final static String ACTION_TXZ_INIT = "com.bixin.launcher_t20.txz.init";
     public final static String ACTION_GET_WEATHER = "com.bixin.speechrecognitiontool.action_get_weather";
     public final static String ACTION_UPDATE_WEATHER = "com.bixin.speechrecognitiontool.action_update_weather";
+    public static final String ACTION_GAODE_SEND = "AUTONAVI_STANDARD_BROADCAST_SEND";
 
+    public final static String OPEN_SET_DEFAULT_MAP = "open_set_default_map";
+    public final static String DEFAULT_MAP = "default_map";
 
     public final static String SP_NAME = "settings";
 
-    public final static boolean IS_ENGLISH = true;
+    public final static boolean IS_ENGLISH = false;
     public final static boolean IS_E_CAR = false;
-    public final static boolean NOT_DVR = true;
-    public final static boolean NOT_CLOUD_SERVICE = true;
+    public final static boolean NOT_DVR = false;
+    public final static boolean NOT_CLOUD_SERVICE = false;
 
     public static final boolean IS_START_TEST_APP = true;//是否打开工厂测试程序
 

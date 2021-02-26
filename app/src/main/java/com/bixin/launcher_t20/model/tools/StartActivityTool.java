@@ -12,6 +12,7 @@ import android.util.Log;
 import com.bixin.launcher_t20.R;
 import com.bixin.launcher_t20.activity.LauncherApp;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -307,6 +308,28 @@ public class StartActivityTool {
         intent.setComponent(cn);
         mContext.stopService(intent);
         mContext.startService(intent);
+    }
+
+    public void startValidationTools() {
+        if (!CustomValue.IS_START_TEST_APP) {
+            return;
+        }
+        String path = StoragePaTool.getStoragePath(true);
+        Log.d(TAG, "startValidationTools: " + path);
+        if (path != null) {
+            path = path + "/BixinTest";
+            File file = new File(path);
+            if (file.exists()) {
+                Intent intent = new Intent();
+                ComponentName cn = new ComponentName("com.sprd.validationtools",
+                        "com.sprd.validationtools.ValidationToolsMainActivity");
+                intent.setComponent(cn);
+                mContext.startActivity(intent);
+                Log.d(TAG, "startValidationTools: OK");
+            } else {
+                Log.d(TAG, "startValidationTools: !exists");
+            }
+        }
     }
 
 }

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.ContentObserver;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,10 +28,8 @@ import com.bixin.launcher_t20.model.receiver.WeatherReceiver;
 import com.bixin.launcher_t20.model.tools.CallBackManagement;
 import com.bixin.launcher_t20.model.tools.CustomValue;
 import com.bixin.launcher_t20.model.tools.StartActivityTool;
-import com.bixin.launcher_t20.model.tools.StoragePaTool;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 
 import io.reactivex.Observable;
@@ -39,7 +39,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class LauncherHomeActivity extends BaseActivity implements View.OnClickListener, OnLocationListener {
+public class LauncherHomeActivity extends BaseActivity implements View.OnClickListener, View.OnLongClickListener, OnLocationListener {
     private static final String TAG = "HomeActivity";
     private LauncherApp myApplication;
     public InnerHandler mHandler;
@@ -51,18 +51,21 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
     private WeatherBean weatherBean;
     private static final int MIN_CLICK_DELAY_TIME = 5000;
     private static long lastClickTime;
+    private static final String CAMERA_RECORD_STATUS = "camera_record_status";
+    private ImageView ivRecordState;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        getFileData();
+        registerDVRContentObserver();
         if (!CustomValue.IS_ENGLISH) {
             mHandler.sendEmptyMessageDelayed(2, 4000);
             mHandler.sendEmptyMessageDelayed(3, 6000);
             mHandler.sendEmptyMessageDelayed(6, 8000);
         }
-        if (CustomValue.IS_START_TEST_APP){
+        if (CustomValue.IS_START_TEST_APP) {
             mHandler.sendEmptyMessageDelayed(7, 12000);
         }
     }
@@ -91,7 +94,7 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
         FrameLayout ivAPP = findViewById(R.id.iv_app);
         ivWeatherIcon = findViewById(R.id.iv_weather);
         tvWeather = findViewById(R.id.tv_weather);
-
+        ivRecordState = findViewById(R.id.iv_record_state);
         tvCurrentCity = findViewById(R.id.tv_city);
         if (CustomValue.IS_ENGLISH) {
             ivWeatherIcon.setVisibility(View.GONE);
@@ -126,12 +129,15 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
         ivBluetooth.setOnClickListener(this);
         ivMusic.setOnClickListener(this);
         ivAPP.setOnClickListener(this);
+        ivNavigation.setOnLongClickListener(this);
     }
 
     private void registerWeatherReceiver() {
         mWeatherReceiver = new WeatherReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(CustomValue.ACTION_UPDATE_WEATHER);
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+//        filter.addAction(ACTION_GAODE_SEND);
         registerReceiver(mWeatherReceiver, filter);
     }
 
@@ -139,10 +145,18 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_navigation: // 高德导航
+                String pkg = Settings.Global.getString(getContentResolver(), CustomValue.DEFAULT_MAP);
+                Log.d(TAG, "onClick:pkg:" + pkg + ";");
                 if (CustomValue.IS_ENGLISH) {
-                    activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_MAPS, "google地图");
+                    if (pkg == null || pkg.equals("")) {
+                        pkg = CustomValue.PACKAGE_NAME_MAPS;
+                    }
+                    activityTools.launchAppByPackageName(pkg, "google地图");
                 } else {
-                    activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_AUTONAVI, "高德地图");
+                    if (pkg == null || pkg.equals("")) {
+                        pkg = CustomValue.PACKAGE_NAME_AUTONAVI;
+                    }
+                    activityTools.launchAppByPackageName(pkg, "高德地图");
                 }
                 break;
             case R.id.iv_recorder: // 记录仪
@@ -174,9 +188,11 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
                 activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_FM, "FM");
                 break;
             case R.id.iv_bluetooth: // 蓝牙
-//                activityTools.launchAppByPackageName("com.cywl.bt.activity");
-                activityTools.jumpByAction(Settings.ACTION_BLUETOOTH_SETTINGS);
-//                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_BLUETOOTH);
+                if (!CustomValue.IS_ENGLISH) {
+                    activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_BLUETOOTH);
+                } else {
+                    activityTools.jumpByAction(Settings.ACTION_BLUETOOTH_SETTINGS);
+                }
                 break;
             case R.id.iv_music: // 音乐
                 if (CustomValue.IS_ENGLISH) {
@@ -193,8 +209,20 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
                 break;
             default: // 应用
                 activityTools.jumpToActivity(this, AppListActivity.class);
+//                Intent intent=new Intent(Settings.ACTION_DREAM_SETTINGS);
+//                startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        int viewID = v.getId();
+        if (viewID == R.id.iv_navigation) {
+            setNavAPP();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -205,15 +233,19 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void updateWeather(String weatherInfo) {
         Log.d(TAG, "updateWeather:weatherInfo " + weatherInfo);
-        weatherBean = JSONObject.parseObject(weatherInfo, WeatherBean.class);
-        if (weatherBean == null) {
-            return;
-        }
-        if (mHandler != null) {
-            mHandler.sendEmptyMessage(4);
+        if (weatherInfo.equals("update")) {
+            Log.d(TAG, "updateWeather: 40");
+            mHandler.sendEmptyMessageDelayed(8, 45000);
+        } else {
+            weatherBean = JSONObject.parseObject(weatherInfo, WeatherBean.class);
+            if (weatherBean == null) {
+                return;
+            }
+            if (mHandler != null) {
+                mHandler.sendEmptyMessage(4);
+            }
         }
     }
-
 
     private void updateWeather() {
         String cityName = weatherBean.getCityName();
@@ -223,6 +255,7 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
         tvWeather.setText(weatherInfo);
         ivWeatherIcon.setImageResource(activityTools.getWeatherIcon(weather));
     }
+
 
     public static class InnerHandler extends Handler {
         private LauncherHomeActivity activity;
@@ -254,7 +287,13 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
 //                activity.activityTools.startECarService();
                     break;
                 case 7:
-                    activity.startValidationTools();
+                    activity.activityTools.startValidationTools();
+                    break;
+                case 8:
+                    activity.getWeatherByNetwork();
+                    break;
+                case 9:
+                    activity.isShowRecordIcon();
                     break;
             }
         }
@@ -265,6 +304,12 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
             Intent intent = new Intent(CustomValue.ACTION_GET_WEATHER);
             sendBroadcast(intent);
         }
+    }
+
+    private void getWeatherByNetwork() {
+        Intent intent = new Intent(CustomValue.ACTION_GET_WEATHER);
+        sendBroadcast(intent);
+        Log.d(TAG, "getWeatherByNetwork: ");
     }
 
     public boolean isFastClick() {
@@ -305,6 +350,11 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
         }));
     }
 
+    private void setNavAPP() {
+        Settings.Global.putInt(getContentResolver(), CustomValue.OPEN_SET_DEFAULT_MAP, 1);
+        activityTools.jumpToActivity(this, AppListActivity.class);
+    }
+
     private void startDVR() {
 /*        Intent intent = new Intent();
         String packageName = "com.bx.carDVR";
@@ -324,28 +374,6 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-    public void startValidationTools() {
-        if (!CustomValue.IS_START_TEST_APP) {
-            return;
-        }
-        String path = StoragePaTool.getStoragePath(true);
-        Log.d(TAG, "startValidationTools: " + path);
-        if (path != null) {
-            path = path + "/BixinTest";
-            File file = new File(path);
-            if (file.exists()) {
-                Intent intent = new Intent();
-                ComponentName cn = new ComponentName("com.sprd.validationtools",
-                        "com.sprd.validationtools.ValidationToolsMainActivity");
-                intent.setComponent(cn);
-                mContext.startActivity(intent);
-                Log.d(TAG, "startValidationTools: OK");
-            } else {
-                Log.d(TAG, "startValidationTools: !exists");
-            }
-        }
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -357,6 +385,43 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void isShowRecordIcon() {
+        int state = 1;
+        try {
+            state = Settings.Global.getInt(getContentResolver(), CAMERA_RECORD_STATUS);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "dvr state: " + state);
+        if (state == 1) {
+            ivRecordState.setVisibility(View.VISIBLE);
+        } else {
+            ivRecordState.setVisibility(View.GONE);
+        }
+    }
+
+
+    private final ContentObserver mDVRContentObserver = new ContentObserver(null) {
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            mHandler.sendEmptyMessage(9);
+        }
+    };
+
+    private void registerDVRContentObserver() {
+        Log.d(TAG, "registerGPSContentObserver: ");
+        getContentResolver().registerContentObserver(
+                Settings.Global.getUriFor(CAMERA_RECORD_STATUS),
+                false, mDVRContentObserver);
+    }
+
+    private void unRegisterContentObserver() {
+        if (mDVRContentObserver != null) {
+            getContentResolver().unregisterContentObserver(mDVRContentObserver);
+        }
     }
 
     @Override
@@ -381,8 +446,8 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
         }
+        unRegisterContentObserver();
         myApplication = null;
         activityTools = null;
     }
-
 }

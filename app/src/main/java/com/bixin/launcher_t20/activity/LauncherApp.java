@@ -19,6 +19,7 @@ import java.util.List;
 public class LauncherApp extends Application {
     private static LauncherApp myApplication = null;
     public ArrayList<AppInfo> mAppList = new ArrayList<>();
+    private boolean isFirstLaunch = true;
 
     @Override
     public void onCreate() {
@@ -107,6 +108,14 @@ public class LauncherApp extends Application {
             return true;
         }
         return false;
+    }
+
+    public boolean isFirstLaunch() {
+        return this.isFirstLaunch;
+    }
+
+    public void setFirstLaunch(boolean isFirst) {
+        this.isFirstLaunch = isFirst;
     }
 
 }

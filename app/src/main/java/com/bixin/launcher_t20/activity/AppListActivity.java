@@ -2,12 +2,11 @@ package com.bixin.launcher_t20.activity;
 
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +19,7 @@ import com.bixin.launcher_t20.model.listener.OnAppUpdateListener;
 import com.bixin.launcher_t20.model.listener.OnRecyclerViewItemListener;
 import com.bixin.launcher_t20.model.receiver.APPReceiver;
 import com.bixin.launcher_t20.model.tools.CallBackManagement;
+import com.bixin.launcher_t20.model.tools.CustomValue;
 import com.bixin.launcher_t20.model.tools.StartActivityTool;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
@@ -44,6 +44,7 @@ public class AppListActivity extends BaseActivity implements OnRecyclerViewItemL
     private RecyclerGridViewAdapter mRecyclerGridViewAdapter;
     private RecyclerView recyclerView;
     private APPReceiver mUpdateAppReceiver;
+    private int openDefaultMap = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -61,6 +62,8 @@ public class AppListActivity extends BaseActivity implements OnRecyclerViewItemL
     @Override
     protected void onStart() {
         super.onStart();
+        openDefaultMap = Settings.Global.getInt(getContentResolver(), CustomValue.OPEN_SET_DEFAULT_MAP, 0);
+        Log.d(TAG, "onStart:openDefaultMap " + openDefaultMap);
     }
 
     @Override
@@ -125,8 +128,14 @@ public class AppListActivity extends BaseActivity implements OnRecyclerViewItemL
 
     @Override
     public void onItemClickListener(int position, String packageName) {
-        Log.d(TAG, "onItemClickListener packageName: " + packageName);
-        mActivityTools.launchAppByPackageName(packageName, "null");
+        Log.d(TAG, "onItemClickListener packageName: " + packageName + " openDefaultMap " + openDefaultMap);
+        if (openDefaultMap == 1) {
+            openDefaultMap = 0;
+            Settings.Global.putInt(getContentResolver(), CustomValue.OPEN_SET_DEFAULT_MAP, 0);
+            Settings.Global.putString(getContentResolver(), CustomValue.DEFAULT_MAP, packageName);
+        } else {
+            mActivityTools.launchAppByPackageName(packageName, "null");
+        }
     }
 
     @Override
@@ -153,9 +162,16 @@ public class AppListActivity extends BaseActivity implements OnRecyclerViewItemL
     }
 
     @Override
+    protected void onPause() {
+        Settings.Global.putInt(getContentResolver(), CustomValue.OPEN_SET_DEFAULT_MAP, 0);
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-
+        Log.d(TAG, "onStop: ");
     }
 
     @Override
