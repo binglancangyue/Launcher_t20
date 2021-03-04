@@ -311,9 +311,6 @@ public class StartActivityTool {
     }
 
     public void startValidationTools() {
-        if (!CustomValue.IS_START_TEST_APP) {
-            return;
-        }
         String path = StoragePaTool.getStoragePath(true);
         Log.d(TAG, "startValidationTools: " + path);
         if (path != null) {
