@@ -14,7 +14,6 @@ import com.bixin.launcher_t20.model.receiver.ScreenOffAdminReceiver;
 
 import static android.content.Context.DEVICE_POLICY_SERVICE;
 import static android.content.Context.POWER_SERVICE;
-import static android.support.constraint.Constraints.TAG;
 
 /**
  * @author Altair
@@ -26,6 +25,7 @@ public class ScreenControl {
     private DevicePolicyManager policyManager;
     private PowerManager mPowerManager;
     private PowerManager.WakeLock mWakeLock;
+    private static final String TAG = "ScreenControl";
 
     @SuppressLint("InvalidWakeLockTag")
     public void init() {

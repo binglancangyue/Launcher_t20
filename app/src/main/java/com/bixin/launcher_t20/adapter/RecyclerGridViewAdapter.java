@@ -1,8 +1,8 @@
 package com.bixin.launcher_t20.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,15 +85,15 @@ public class RecyclerGridViewAdapter extends RecyclerView.Adapter<RecyclerGridVi
                         gridViewAdapter.mListener.onItemClickListener(position, packageName);
                     }
                 });
-//                itemView.setOnLongClickListener(new View.OnLongClickListener() {
-//                    @Override
-//                    public boolean onLongClick(View v) {
-//                        int position = getAdapterPosition();
-//                        String packageName = adapter.mData.get(position).getPkgName();
-//                        gridViewAdapter.mListener.onItemLongClickListener(position, packageName);
-//                        return true;
-//                    }
-//                });
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        int position = getAdapterPosition();
+                        String packageName = adapter.mData.get(position).getPkgName();
+                        gridViewAdapter.mListener.onItemLongClickListener(position, packageName);
+                        return true;
+                    }
+                });
             }
         }
     }

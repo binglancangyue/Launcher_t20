@@ -2,13 +2,14 @@ package com.bixin.launcher_t20.activity;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
@@ -21,6 +22,7 @@ import com.bixin.launcher_t20.model.receiver.APPReceiver;
 import com.bixin.launcher_t20.model.tools.CallBackManagement;
 import com.bixin.launcher_t20.model.tools.CustomValue;
 import com.bixin.launcher_t20.model.tools.StartActivityTool;
+import com.bixin.launcher_t20.model.tools.ToastTool;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
 import java.util.ArrayList;
@@ -130,6 +132,7 @@ public class AppListActivity extends BaseActivity implements OnRecyclerViewItemL
     public void onItemClickListener(int position, String packageName) {
         Log.d(TAG, "onItemClickListener packageName: " + packageName + " openDefaultMap " + openDefaultMap);
         if (openDefaultMap == 1) {
+            ToastTool.showToast("Successful");
             openDefaultMap = 0;
             Settings.Global.putInt(getContentResolver(), CustomValue.OPEN_SET_DEFAULT_MAP, 0);
             Settings.Global.putString(getContentResolver(), CustomValue.DEFAULT_MAP, packageName);
@@ -140,10 +143,10 @@ public class AppListActivity extends BaseActivity implements OnRecyclerViewItemL
 
     @Override
     public void onItemLongClickListener(int position, String packageName) {
-//        Log.d(TAG, "onItemLongClickListener packageName: " + packageName);
-//        Uri uri = Uri.fromParts("package", packageName, null);
-//        Intent intent = new Intent(Intent.ACTION_DELETE, uri);
-//        startActivity(intent);
+        Log.d(TAG, "onItemLongClickListener packageName: " + packageName);
+        Uri uri = Uri.fromParts("package", packageName, null);
+        Intent intent = new Intent(Intent.ACTION_DELETE, uri);
+        startActivityForResult(intent, 909);
     }
 
     @Override
@@ -166,6 +169,12 @@ public class AppListActivity extends BaseActivity implements OnRecyclerViewItemL
         Settings.Global.putInt(getContentResolver(), CustomValue.OPEN_SET_DEFAULT_MAP, 0);
         super.onPause();
         Log.d(TAG, "onPause: ");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult:resultCode:" + resultCode+" requestCode:"+requestCode);
     }
 
     @Override

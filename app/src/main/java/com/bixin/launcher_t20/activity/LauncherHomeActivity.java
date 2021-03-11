@@ -11,8 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
-import android.support.constraint.ConstraintLayout;
+import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -175,7 +175,7 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.iv_cloud_service: // 云服务
                 if (CustomValue.IS_ENGLISH || CustomValue.NOT_CLOUD_SERVICE) {
-                    activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_ESTRONGS, "文件管理器");
+                    activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_SPRD, "文件管理器");
                 } else if (CustomValue.IS_E_CAR) {
                     activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_E_CAR);
                 } else {
@@ -188,11 +188,7 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
                 activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_FM, "FM");
                 break;
             case R.id.iv_bluetooth: // 蓝牙
-                if (!CustomValue.IS_ENGLISH) {
-                    activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_BLUETOOTH);
-                } else {
-                    activityTools.jumpByAction(Settings.ACTION_BLUETOOTH_SETTINGS);
-                }
+                activityTools.launchAppByPackageName(CustomValue.PACKAGE_NAME_BLUETOOTH);
                 break;
             case R.id.iv_music: // 音乐
                 if (CustomValue.IS_ENGLISH) {

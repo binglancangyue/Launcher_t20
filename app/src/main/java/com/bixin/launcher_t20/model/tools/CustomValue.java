@@ -28,6 +28,7 @@ public class CustomValue {
     public static final String PACKAGE_NAME_ESTRONGS = "com.estrongs.android.pop"; //ES
     public static final String PACKAGE_NAME_MAPSLITE = "com.google.android.apps.mapslite"; //mapslite
     public static final String PACKAGE_NAME_MAPS = "com.google.android.apps.maps"; //google maps
+    public static final String PACKAGE_NAME_SPRD = "com.sprd.fileexplorer"; //sprd
 
     public final static String PACKAGE_NAME_RADIO = "cn.kuwo.tingshucar";
     public final static String PACKAGE_NAME_RCX = "com.mapgoo.diruite";
