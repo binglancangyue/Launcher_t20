@@ -50,10 +50,10 @@ public class CustomValue {
 
     public final static String SP_NAME = "settings";
 
-    public final static boolean IS_ENGLISH = false;
+    public final static boolean IS_ENGLISH = true;
     public final static boolean IS_E_CAR = false;
     public final static boolean NOT_DVR = false;
-    public final static boolean NOT_CLOUD_SERVICE = false;
+    public final static boolean NOT_CLOUD_SERVICE = true;// true:显示文件管理器 false:云服务
 
     public static final boolean IS_START_TEST_APP = true;//是否打开工厂测试程序
 

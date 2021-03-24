@@ -61,9 +61,11 @@ public class LauncherHomeActivity extends BaseActivity implements View.OnClickLi
 //        getFileData();
         registerDVRContentObserver();
         if (!CustomValue.IS_ENGLISH) {
-            mHandler.sendEmptyMessageDelayed(2, 4000);
             mHandler.sendEmptyMessageDelayed(3, 6000);
             mHandler.sendEmptyMessageDelayed(6, 8000);
+        }
+        if (!CustomValue.NOT_DVR) {
+            mHandler.sendEmptyMessageDelayed(2, 4000);
         }
         if (CustomValue.IS_START_TEST_APP) {
             mHandler.sendEmptyMessageDelayed(7, 12000);
